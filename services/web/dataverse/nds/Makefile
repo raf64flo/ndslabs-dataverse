@@ -9,7 +9,7 @@ STEPS 		= 1 2 3
 
 DEBUG		=y	# delete or commend for production
 
-include Makefiles/Makefile.nds
+include ../../../../devtools/Makefiles/Makefile.nds
 
 CMDS.1 		= apt-get -y update \
 		apt-get -y install gzip maven postgresql postgresql-contrib jq curl git maven \

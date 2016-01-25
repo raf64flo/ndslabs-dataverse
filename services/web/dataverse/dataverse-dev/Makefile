@@ -13,7 +13,7 @@ TSTEPS		= $(BUILDORDER:%=$(IMG).%)
 db:
 	echo $(TSTEPS)
 
-include Makefiles/Makefile.nds
+include ../../../../devtools/Makefiles/Makefile.nds
 
 
 build: $(DEPS)
