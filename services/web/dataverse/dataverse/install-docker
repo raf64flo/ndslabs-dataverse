@@ -180,14 +180,11 @@ unless ( $psql_exec eq "" ) {
     else {
         my (@psql_version_tokens) = split( '\.', $postgresVersion );
 
-        print "\n\nFound Postgres psql command, version $postgresVersion.\n\n";
-
         $psql_major_version = $psql_version_tokens[0];
         $psql_minor_version = $psql_version_tokens[1];
 
         $pg_major_version = $psql_major_version;
         $pg_minor_version = $psql_minor_version;
-
     }
 }
 
@@ -199,45 +196,26 @@ if ( $psql_exec eq "" ) {
     exit 1;
 }
 
-if ( $pg_major_version == 0 ) {
-}
 
+print "Using psql version " . $pg_major_version . "." . $pg_minor_version . "\n";
 
-print "(Using psql version " . $pg_major_version . "." . $pg_minor_version . ")\n";
 
 # Check if we can connect 
 
-#chdir("/tmp");
-#if ( !system( $psql_exec . "/psql -c 'SELECT * FROM pg_roles' > /dev/null 2>&1" ) ) {
-#   print "Yes, it is.\n";
-#
-#}
-#
-## 4c. CHECK IF THIS DB ALREADY EXISTS:
-#
-#my $psql_command_dbcheck =
-#  $psql_exec . "/psql -c \"\" -d " . $CONFIG_DEFAULTS{'POSTGRES_DATABASE'} . ">/dev/null 2>&1";
-#
-#if ( ( my $exitcode = system($psql_command_dbcheck) ) == 0 ) {
-#    $> = 0;
-#    $< = 0;
-#
-#    chdir($cwd);
-#
-#    print "WARNING! Database " . $CONFIG_DEFAULTS{'POSTGRES_DATABASE'} . " already exists!\n";
-#    print "\nPlease note that you can only use this installer to create a blank, \n";
-#    print "new and shiny DVN database. I.e., you cannot install on top of an \n";
-#    print "existing database. Please enter a different name for the DVN database.\n";
-#    print "\nPress any key to continue, or ctrl-C to exit the installer...\n\n";
-#
-#    system "stty cbreak </dev/tty >/dev/tty 2>&1";
-#    my $key = getc(STDIN);
-#    system "stty -cbreak </dev/tty >/dev/tty 2>&1";
-#    print "\n";
-#
-#    goto ENTERCONFIG;
-#
-#}
+if ( system( $psql_exec . "/psql -U postgres -h " . $CONFIG_DEFAULTS{'POSTGRES_SERVER'} . " -p " . $CONFIG_DEFAULTS{'POSTGRES_PORT'} . " -c 'SELECT * FROM pg_roles' > /dev/null 2>&1" ) == 0 ) {
+   print "Connected to postgres on " . $CONFIG_DEFAULTS{'POSTGRES_SERVER'} . ":" . $CONFIG_DEFAULTS{'POSTGRES_PORT'} . "\n";
+}
+
+# 4c. CHECK IF THIS DB ALREADY EXISTS:
+
+my $psql_command_dbcheck =
+  $psql_exec . "/psql -U postgres -h " . $CONFIG_DEFAULTS{'POSTGRES_SERVER'} . " -p " . $CONFIG_DEFAULTS{'POSTGRES_PORT'} . " -c \"\" -d " . $CONFIG_DEFAULTS{'POSTGRES_DATABASE'} . ">/dev/null 2>&1";
+
+if ( ( my $exitcode = system($psql_command_dbcheck) ) == 0 ) {
+
+    print " Database " . $CONFIG_DEFAULTS{'POSTGRES_DATABASE'} . " already exists!\n";
+}
+exit 1;
 #
 ## 4d. CHECK IF THIS USER ALREADY EXISTS:
 #
@@ -633,15 +611,8 @@ sub create_pg_hash {
 
     # for Redhat:
 
-    ##print STDERR "executing /bin/echo -n $encode_line | md5sum\n";
 
-    my $hash;
-    if ( $WORKING_OS eq "MacOSX" ) {
-        $hash = `/bin/echo -n $encode_line | md5`;
-    }
-    else {
-        $hash = `/bin/echo -n $encode_line | md5sum`;
-    }
+    my $hash = `/bin/echo -n $encode_line | md5sum`;
 
     chop $hash;
 
