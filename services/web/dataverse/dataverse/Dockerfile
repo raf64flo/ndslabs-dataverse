@@ -1,0 +1,57 @@
+FROM centos:latest
+MAINTAINER Craig Willis (willis8@illinois.edu)
+
+#install.sh
+RUN yum install -y wget unzip perl git java-1.8.0-openjdk-devel postgresql.x86_64
+
+# Install Glassfish 4.1
+RUN cd /tmp && wget http://dlc-cdn.sun.com/glassfish/4.1/release/glassfish-4.1.zip && \
+	unzip glassfish-4.1.zip && \
+	mv glassfish4 /usr/local && \
+	cd /usr/local/glassfish4/glassfish/modules && \
+	rm weld-osgi-bundle.jar && \
+	wget http://central.maven.org/maven2/org/jboss/weld/weld-osgi-bundle/2.2.10.SP1/weld-osgi-bundle-2.2.10.SP1-glassfish4.jar  && \
+        rm -rf /usr/local/glassfish4/glassfish/domains/domain1 && \ 
+	rm /tmp/glassfish-4.1.zip && \
+	/usr/local/glassfish4/bin/asadmin create-domain --nopassword domain1 
+#/usr/local/glassfish4/bin/asadmin start-domain domain1
+#/usr/local/glassfish4/bin/asadmin osgi lb | grep 'Weld OSGi Bundle'
+
+# Install Solr 4.6.0
+RUN cd /tmp && wget https://archive.apache.org/dist/lucene/solr/4.6.0/solr-4.6.0.tgz  && \
+	tar xvzf solr-4.6.0.tgz  && \
+	mv solr-4.6.0 /usr/local/  && \
+	cd /usr/local/solr-4.6.0/example/solr/collection1/conf/  && \
+	mv schema.xml schema.xml.backup  && \
+	wget -q --no-check-certificate https://github.com/IQSS/dataverse/raw/master/conf/solr/4.6.0/schema.xml  && \
+	rm /tmp/solr-4.6.0.tgz
+	#cd /usr/local/solr-4.6.0/example/
+	#java -jar start.jar
+
+# Install jq
+RUN cd /tmp && wget https://github.com/stedolan/jq/releases/download/jq-1.5/jq-linux64 && \
+	mv jq-linux64 /usr/local/bin && \
+	chmod +x /usr/local/bin/jq-linux64 && \
+	ln -s /usr/local/bin/jq-linux64 /usr/local/bin/jq
+
+# Install DataVerse
+RUN  cd ~ && \
+	wget https://github.com/IQSS/dataverse/releases/download/v4.2.3/dvinstall-4.2.3.zip && \
+	unzip dvinstall-4.2.3.zip && \
+        cp -Rf dvinstall/jhove.conf /usr/local/glassfish4/glassfish/domains/domain1/config && \
+        cp -f dvinstall/dataverse.war /usr/local/glassfish4/glassfish/domains/domain1/autodeploy 
+
+
+#
+## rApache
+#yum install httpd
+#Update httpd.conf, remove Indexes
+#yum install libapreq2
+#
+## Two Ravens
+#wget https://github.com/IQSS/TwoRavens/archive/master.zip
+#unzip master.zip
+#mv TwoRavens-master/ /var/www/html/dataexplore
+#cd /var/www/html/dataexplore/
+#chmod +x install.pl
+#
