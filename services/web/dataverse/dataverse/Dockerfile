@@ -14,8 +14,6 @@ RUN cd /tmp && wget http://dlc-cdn.sun.com/glassfish/4.1/release/glassfish-4.1.z
         rm -rf /usr/local/glassfish4/glassfish/domains/domain1 && \ 
 	rm /tmp/glassfish-4.1.zip && \
 	/usr/local/glassfish4/bin/asadmin create-domain --nopassword domain1 
-#/usr/local/glassfish4/bin/asadmin start-domain domain1
-#/usr/local/glassfish4/bin/asadmin osgi lb | grep 'Weld OSGi Bundle'
 
 # Install Solr 4.6.0
 RUN cd /tmp && wget https://archive.apache.org/dist/lucene/solr/4.6.0/solr-4.6.0.tgz  && \
@@ -25,8 +23,6 @@ RUN cd /tmp && wget https://archive.apache.org/dist/lucene/solr/4.6.0/solr-4.6.0
 	mv schema.xml schema.xml.backup  && \
 	wget -q --no-check-certificate https://github.com/IQSS/dataverse/raw/master/conf/solr/4.6.0/schema.xml  && \
 	rm /tmp/solr-4.6.0.tgz
-	#cd /usr/local/solr-4.6.0/example/
-	#java -jar start.jar
 
 # Install jq
 RUN cd /tmp && wget https://github.com/stedolan/jq/releases/download/jq-1.5/jq-linux64 && \
@@ -34,13 +30,22 @@ RUN cd /tmp && wget https://github.com/stedolan/jq/releases/download/jq-1.5/jq-l
 	chmod +x /usr/local/bin/jq-linux64 && \
 	ln -s /usr/local/bin/jq-linux64 /usr/local/bin/jq
 
-# Install DataVerse
+
+#RUN mkdir -p /tmp/WEB-INF/classes/META-INF/ 
+#COPY WEB-INF/classes/META-INF/persistence.xml /tmp/WEB-INF/classes/META-INF/
+#        jar -uf dvinstall/dataverse.war -C /tmp/ /WEB-INF/classes/META-INF/persistence.xml && \
+
+# Install DataVerse WAR
 RUN  cd ~ && \
 	wget https://github.com/IQSS/dataverse/releases/download/v4.2.3/dvinstall-4.2.3.zip && \
 	unzip dvinstall-4.2.3.zip && \
         cp -Rf dvinstall/jhove.conf /usr/local/glassfish4/glassfish/domains/domain1/config && \
         cp -f dvinstall/dataverse.war /usr/local/glassfish4/glassfish/domains/domain1/autodeploy 
 
+
+COPY start-dataverse /root/dvinstall/
+COPY entrypoint.sh /
+ENTRYPOINT ["/entrypoint.sh"]
 
 #
 ## rApache
