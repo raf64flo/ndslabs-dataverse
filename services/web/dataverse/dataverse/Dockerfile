@@ -31,16 +31,15 @@ RUN cd /tmp && wget https://github.com/stedolan/jq/releases/download/jq-1.5/jq-l
 	ln -s /usr/local/bin/jq-linux64 /usr/local/bin/jq
 
 
-#RUN mkdir -p /tmp/WEB-INF/classes/META-INF/ 
-#COPY WEB-INF/classes/META-INF/persistence.xml /tmp/WEB-INF/classes/META-INF/
-#        jar -uf dvinstall/dataverse.war -C /tmp/ /WEB-INF/classes/META-INF/persistence.xml && \
+RUN mkdir -p /tmp/WEB-INF/classes/META-INF/ 
+COPY WEB-INF/classes/META-INF/persistence.xml /tmp/WEB-INF/classes/META-INF/
 
 # Install DataVerse WAR
 RUN  cd ~ && \
 	wget https://github.com/IQSS/dataverse/releases/download/v4.2.3/dvinstall-4.2.3.zip && \
-	unzip dvinstall-4.2.3.zip && \
-        cp -Rf dvinstall/jhove.conf /usr/local/glassfish4/glassfish/domains/domain1/config && \
-        cp -f dvinstall/dataverse.war /usr/local/glassfish4/glassfish/domains/domain1/autodeploy 
+	unzip dvinstall-4.2.3.zip  && \
+        cp dvinstall/dataverse.war dvinstall/dataverse-none.war && \
+        jar -uf dvinstall/dataverse-none.war -C /tmp/ /WEB-INF/classes/META-INF/persistence.xml 
 
 
 COPY start-dataverse /root/dvinstall/
