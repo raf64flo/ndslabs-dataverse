@@ -31,6 +31,23 @@ else
 fi 
 export POSTGRES_PORT
 
+
+# solr
+if [ -n "$SOLR_PORT_8983_TCP_ADDR" ]; then
+	SOLR_HOST=$SOLR_PORT_8983_TCP_ADDR
+elif [ -z "$SOLR_HOST" ]; then
+	SOLR_HOST="localhost"
+fi
+export SOLR_HOST
+
+if [ -n "$SOLR_PORT_8983_TCP_PORT" ]; then
+	SOLR_PORT=$SOLR_PORT_8983_TCP_PORT
+else
+	SOLR_PORT=8983
+fi 
+export SOLR_PORT
+
+
 cd ~/dvinstall
 ./start-dataverse
 

@@ -5,7 +5,7 @@
 # to setup and run DataVerse. Software installation and static configuration
 # have been moved to the Dockerfile. This script now handles any configuration
 # that is dependent on environment (i.e., other containers) and any
-# actual service startup tasks (glassfish, etc).
+# actual service startup tasks (glassfish, solr, etc).
 #
 # Assumptions: 
 #    OS is always CentOS. All config is read from environment
@@ -26,17 +26,17 @@ my @CONFIG_VARIABLES = (
     'HOST_DNS_ADDRESS',
     'GLASSFISH_DIRECTORY',
     'MAIL_SERVER',
+
     'POSTGRES_HOST',
     'POSTGRES_PORT',
     'POSTGRES_DATABASE',
     'POSTGRES_USER',
     'POSTGRES_PASSWORD',
+
     'RSERVE_HOST',
     'RSERVE_PORT',
     'RSERVE_USER',
-    'RSERVE_PASSWORD',
-    'SOLR_HOST',
-    'SOLR_PORT',
+    'RSERVE_PASSWORD'
 );
 
 
@@ -420,6 +420,16 @@ else {
 }
 
 
+# Start Solr
+
+if(system("ps -ef | grep  \"java -jar start.jar\" | grep -v grep") == 0) {
+    print "Solr is running!\n";
+} else { 
+   print "Starting Solr\n";
+   chdir("/usr/local/solr-4.6.0/example");
+   system("java -jar start.jar &");
+   sleep(20); 
+}
 chdir($cwd);
 
 system( "/bin/cp -Rf jhove.conf " . $glassfish_dir . "/glassfish/domains/domain1/config" );
@@ -460,9 +470,7 @@ if ($newdb) {
        }
        print "ok!\n";
    }
-   system ("curl -X PUT -d " . $CONFIG_DEFAULTS{'SOLR_HOST'} . ":" . $CONFIG_DEFAULTS{'SOLR_PORT'} . " http://localhost:8080/api/admin/settings/:SolrHostColonPort");
 }
-
 
 # TODO Move to Dockerfile
 ## install the DVN guides (HTML) into the application docroot:

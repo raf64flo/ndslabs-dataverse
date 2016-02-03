@@ -15,15 +15,6 @@ RUN cd /tmp && wget http://dlc-cdn.sun.com/glassfish/4.1/release/glassfish-4.1.z
 	rm /tmp/glassfish-4.1.zip && \
 	/usr/local/glassfish4/bin/asadmin create-domain --nopassword domain1 
 
-# Install Solr 4.6.0
-RUN cd /tmp && wget https://archive.apache.org/dist/lucene/solr/4.6.0/solr-4.6.0.tgz  && \
-	tar xvzf solr-4.6.0.tgz  && \
-	mv solr-4.6.0 /usr/local/  && \
-	cd /usr/local/solr-4.6.0/example/solr/collection1/conf/  && \
-	mv schema.xml schema.xml.backup  && \
-	wget -q --no-check-certificate https://github.com/IQSS/dataverse/raw/master/conf/solr/4.6.0/schema.xml  && \
-	rm /tmp/solr-4.6.0.tgz
-
 # Install jq
 RUN cd /tmp && wget https://github.com/stedolan/jq/releases/download/jq-1.5/jq-linux64 && \
 	mv jq-linux64 /usr/local/bin && \

@@ -1,4 +1,9 @@
 # Rserve
+solr:
+  image: ndslabs/dataverse-solr
+  ports:
+    - "8983:8983"
+
 rserve:
   image: ndslabs/dataverse-rserve
   ports:
@@ -19,15 +24,12 @@ dataverse:
      HOST_DNS_ADDRESS: localhost
      GLASSFISH_DIRECTORY: /usr/local/glassfish4
      MAIL_SERVER: smtp.ncsa.illinois.edu
-     #POSTGRES_SERVER: 172.17.0.55
-     #POSTGRES_PORT: 5432
      POSTGRES_DATABASE: dvndb
      POSTGRES_USER: dvnapp
      POSTGRES_PASSWORD: secret
-     #RSERVE_HOST: 172.17.0.100
-     #RSERVE_PORT: 6311
      RSERVE_USER: rserve
      RSERVE_PASSWORD: rserve
   links:
     - rserve  
     - postgres  
+    - solr  
