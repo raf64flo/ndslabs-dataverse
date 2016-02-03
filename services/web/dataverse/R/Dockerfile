@@ -9,6 +9,7 @@ RUN rpm -Uvh https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.
 
 
 RUN R -q -e "install.packages(c('R2HTML', 'Rserve', 'VGAM', 'AER', 'dplyr', 'quantreg', 'geepack', 'maxLik', 'Amelia', 'Rook', 'jsonlite', 'rjson', 'devtools', 'DescTools'), INSTALL_opts=c('--no-test-load'), repos='http://cran.r-project.org', quiet=T, dependencies=T)"
+
 #RUN cd /tmp && wget https://github.com/IQSS/Zelig/archive/master.zip && unzip master.zip  && \
 #    R CMD 
 #(cd /tmp; unzip master.zip)
@@ -26,45 +27,20 @@ RUN R -q -e "install.packages(c('R2HTML', 'Rserve', 'VGAM', 'AER', 'dplyr', 'qua
 #    fi
 #    exit 1
 #fi
-#
-#echo
-#echo "checking Rserve configuration:"
-#
-#/usr/sbin/groupadd -g 97 -o -r rserve >/dev/null 2>/dev/null || :
-#/usr/sbin/useradd -g rserve -o -r -d $RLIBDIR -s /bin/bash \
-#        -c "Rserve User" -u 97 rserve 2>/dev/null || :
-#
-#echo
-#
-#echo
-#
-#if [ ! -f /etc/Rserv.conf ]
-#then
-#    echo "installing Rserv configuration file."
-#    install -o rserve -g rserve Rserv.conf /etc/Rserv.conf
-#    echo
-#fi
-#
-#if [ ! -f /etc/Rserv.pwd ]
-#then
-#    echo "Installing Rserve password file."
-#    echo "Please change the default password in /etc/Rserv.pwd"
-#    echo "(and make sure this password is set correctly as a"
-#    echo "JVM option in the glassfish configuration of your DVN)"
-#    install -m 0600 -o rserve -g rserve Rserv.pwd /etc/Rserv.pwd
-#    echo
-#fi
-#
-#if [ ! -f /etc/init.d/rserve ]
-#then
-#    echo "Installing Rserve startup file."
-#    install rserve-startup.sh /etc/init.d/rserve
-#    chkconfig rserve on
-#    echo "You can start Rserve daemon by executing"
-#    echo "  service rserve start"
-#fi
-#
-#echo
-##echo "Successfully installed Dataverse R framework."
-#echo
-#
+
+RUN /usr/sbin/groupadd -g 97 -o -r rserve 
+RUN /usr/sbin/useradd -g rserve -o -r -d /usr/lib64/R/library -s /bin/bash -c "Rserve User" -u 97 rserve 
+
+RUN cd /tmp/ && wget https://raw.githubusercontent.com/IQSS/dataverse/develop/conf/R/Rserv.conf && \
+	wget https://raw.githubusercontent.com/IQSS/dataverse/develop/conf/R/Rserv.pwd && \
+	wget https://raw.githubusercontent.com/IQSS/dataverse/develop/conf/R/rserve-startup.sh && \
+        install -o rserve -g rserve Rserv.conf /etc/Rserv.conf && \ 
+        install -m 0600 -o rserve -g rserve Rserv.pwd /etc/Rserv.pwd && \
+        install rserve-startup.sh /etc/init.d/rserve 
+
+RUN yum install -y initscripts
+
+EXPOSE 6311
+#COPY entrypoint.sh /
+#ENTRYPOINT ["/entrypoint.sh"]
+CMD ["R", "CMD", "Rserve.dbg", "--vanilla"]
