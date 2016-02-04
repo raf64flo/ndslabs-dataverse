@@ -32,10 +32,10 @@ echo $TWORAVENS_URL
 
 if ncat $DATAVERSE_HOST $DATAVERSE_PORT -w $TIMEOUT --send-only < /dev/null ; then
         echo DataVerse running;
-	curl -X PUT -d http://$DATAVERSE_URL/dataexplore/gui.html http://$TWORAVENS_URL/api/admin/settings/:TwoRavensUrl
+	curl -X PUT -d http://$TWORAVENS_URL/dataexplore/gui.html http://$DATAVERSE_URL/api/admin/settings/:TwoRavensUrl
 else
         echo Unable to register TwoRavens through DataVerse API
-	echo "curl -X PUT -d http://$DATAVERSE_URL/dataexplore/gui.html http://$TWORAVENS_URL/api/admin/settings/:TwoRavensUrl"
+	curl -X PUT -d http://$TWORAVENS_URL/dataexplore/gui.html http://$DATAVERSE_URL/api/admin/settings/:TwoRavensUrl
 fi
 
 # Configure TwoRavens to use DataVerse (and DataVerse to use TwoRavens)
