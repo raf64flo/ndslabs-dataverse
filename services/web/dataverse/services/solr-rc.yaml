@@ -1,0 +1,23 @@
+apiVersion: v1
+kind: ReplicationController
+metadata:
+  name: solr-rc
+spec:
+  replicas: 1
+  selector:
+    component: solr
+  template:
+    metadata:
+      labels:
+        component: solr
+    spec:
+      containers:
+      - name: solr
+        image: ndslabs/dataverse-solr
+        ports:
+        - containerPort: 8983
+          protocol: TCP
+      volumes:
+      - emptyDir:
+          medium: ""
+        name: "storage"

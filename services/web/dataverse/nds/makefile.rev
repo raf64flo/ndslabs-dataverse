@@ -1,8 +1,0 @@
-default: all
-
-foo = please reverse me
-
-reverse = $(if $(1),$(call reverse,$(wordlist 2,$(words $(1)),$(1)))) $(firstword $(1))
-
-all : 
-	echo $(call reverse,$(foo))

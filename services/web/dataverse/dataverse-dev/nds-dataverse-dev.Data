@@ -1,7 +1,0 @@
-#
-# Data volume info
-# 
-DATAVOL		= $(IMG).data
-DATAVOLS	= 
-HOSTVOLS	= dependencies:/dependencies
-

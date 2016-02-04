@@ -2,7 +2,7 @@ FROM centos:latest
 MAINTAINER Craig Willis (willis8@illinois.edu)
 
 #install.sh
-RUN yum install -y wget unzip perl git java-1.8.0-openjdk-devel postgresql.x86_64
+RUN yum install -y wget unzip perl git java-1.8.0-openjdk-devel postgresql nc
 
 # Install Glassfish 4.1
 RUN cd /tmp && wget http://dlc-cdn.sun.com/glassfish/4.1/release/glassfish-4.1.zip && \

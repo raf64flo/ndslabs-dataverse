@@ -1,4 +1,0 @@
-unzip /tmp/dependencies/glassfish-4.1.zip
-tar xf /tmp/dependencies/solr-4.6.0-src.tgz
-mkdir -p /usr/java && tar xf /tmp/dependencies/jdk-8u60-linux-x64.tar.gz -C /usr/java
-
