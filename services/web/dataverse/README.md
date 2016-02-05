@@ -57,7 +57,7 @@ The following changes were made to the DataVerse application:
 
 
 ### Open issues
-
+* Can't access /proc/meminfo
 * TwoRavens and DataVerse both need the public address/port of each service for integration.  This is currently achieved through the use of Kubernetes NodePort and a hack to tworavens/endpoint.sh to read the public IP of the host. This opens questions about use of Kubernetes to host publicly accessible services.
 * This implementation does not include Shibboleth
 * Older versions of DataVerse rely on Rserve, but this integration is no longer apparent in 4.2.3
