@@ -4,6 +4,31 @@ This is an experimental Kubernetes-based implemention of the [DataVerse](http://
 
 This is a preliminary implementation of the [DataVerse installation process](http://guides.dataverse.org/en/latest/installation/). DataVerse itself is a Java-based web application deployed under the Glassfish application server. It requires installations of Postgres, Solr 4.6.0, and R/Rserve. DataVerse optionally integrates with TwoRavens -- a Javascript-based application that runs under Apache/rApache and requires R shared librares.
 
+### Component requirements
+
+Dataverse
+* Process: asadmin (glassfish
+* Volumes: /usr/local/glassfish4/glassfish/domains/domain1/files
+* Logfiles: /usr/local/glassfish4/glassfish/domains/domain1/logs
+* Customization points?
+* Relations: Solr 4.6, PostGres, R/Rserve?, TwoRavens (optional)
+
+Solr 4.6
+* Process: java -jar start.jar
+* Volumes: /usr/local/solr-4.6.0/example/solr/
+* Logfiles: /usr/local/solr-4.6.0/example/logs
+* Customization points: DataVerse-specific schema in solr/collection1/conf/schema.xml
+* Relations: none
+
+Postgres
+* Process: ?
+* Volumes: /var/lib/postgresql/data  
+* Logfiles: /var/log/postgresql/?
+* Customization points: Config data directory
+
+
+
+
 ### Building Docker images
 The dockerfiles subdirectory contains Dockerfiles and associated startup files (e.g., entrypoint.sh) for each of these services. Custom images have been created for each of the following:
 
@@ -36,4 +61,5 @@ The following changes were made to the DataVerse application:
 * TwoRavens and DataVerse both need the public address/port of each service for integration.  This is currently achieved through the use of Kubernetes NodePort and a hack to tworavens/endpoint.sh to read the public IP of the host. This opens questions about use of Kubernetes to host publicly accessible services.
 * This implementation does not include Shibboleth
 * Older versions of DataVerse rely on Rserve, but this integration is no longer apparent in 4.2.3
+* Volumes are currently not implemented
 
