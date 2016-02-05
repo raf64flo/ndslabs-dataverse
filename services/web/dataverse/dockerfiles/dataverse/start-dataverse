@@ -4,16 +4,14 @@
 # This is a heavily modified version of the dvninstall/install script used
 # to setup and run DataVerse. Software installation and static configuration
 # have been moved to the Dockerfile. This script now handles any configuration
-# that is dependent on environment (i.e., other containers) and any
-# actual service startup tasks (glassfish, etc).
+# that is dependent on environment (i.e., other containers) and any actual service 
+# startup tasks (glassfish, etc).
 #
 # Assumptions: 
 #    OS is always CentOS. All config is read from environment
 #
 # TODO: 
 #    Check required environment variables
-#    Move Solr to separate container
-#
 #
 
 use strict;
@@ -38,8 +36,6 @@ my @CONFIG_VARIABLES = (
     'SOLR_HOST',
     'SOLR_PORT',
 );
-
-
 
 
 my %CONFIG_DEFAULTS = (
@@ -327,7 +323,6 @@ print "Glassfish looks OK!\n";
 
 my $gf_heap_default = "2048";
 my $sys_mem_total   = 0;
-
 
 # TODO: Can't do this in a container under docker.  Need another way -- maybe declared?
 #if ( -e "/proc/meminfo" && open MEMINFO, "/proc/meminfo" ) {

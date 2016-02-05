@@ -1,7 +1,7 @@
 FROM centos:latest
 MAINTAINER Craig Willis (willis8@illinois.edu)
 
-#install.sh
+# Install dependencies
 RUN yum install -y wget unzip perl git java-1.8.0-openjdk-devel postgresql nc
 
 # Install Glassfish 4.1
@@ -22,6 +22,7 @@ RUN cd /tmp && wget https://github.com/stedolan/jq/releases/download/jq-1.5/jq-l
 	ln -s /usr/local/bin/jq-linux64 /usr/local/bin/jq
 
 
+# Customized persistence xml to avoid database recreation
 RUN mkdir -p /tmp/WEB-INF/classes/META-INF/ 
 COPY WEB-INF/classes/META-INF/persistence.xml /tmp/WEB-INF/classes/META-INF/
 
@@ -36,17 +37,3 @@ RUN  cd ~ && \
 COPY start-dataverse /root/dvinstall/
 COPY entrypoint.sh /
 ENTRYPOINT ["/entrypoint.sh"]
-
-#
-## rApache
-#yum install httpd
-#Update httpd.conf, remove Indexes
-#yum install libapreq2
-#
-## Two Ravens
-#wget https://github.com/IQSS/TwoRavens/archive/master.zip
-#unzip master.zip
-#mv TwoRavens-master/ /var/www/html/dataexplore
-#cd /var/www/html/dataexplore/
-#chmod +x install.pl
-#
