@@ -103,9 +103,7 @@ while (<WEBAPPFILEIN>) {
     # rApache url:
     s/http:\/\/0.0.0.0:8000\/custom\//$RAPACHEURL\/custom\//g;
     # dataverse url: 
-    #s/%PRODUCTION_DATAVERSE_URL%/$DATAVERSE_URL/g;
-    # caw - hack for NDS testing
-    s/%PRODUCTION_DATAVERSE_URL%/"http:\/\/ + window.location.hostname + ":30000"/g;
+    s/%PRODUCTION_DATAVERSE_URL%/$DATAVERSE_URL/g;
     print WEBAPPFILEOUT $_;
 }
 

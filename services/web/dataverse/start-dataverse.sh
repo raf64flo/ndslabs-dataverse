@@ -13,6 +13,7 @@ kubectl create -f controllers/tworavens-rc.yaml
 
 
 dataversePort=`kubectl describe service dataverse  | grep "^NodePort" | awk '{print $3}' | cut -f1 -d"/"`
+twoRavensPort=`kubectl describe service tworavens  | grep "^NodePort" | awk '{print $3}' | cut -f1 -d"/"`
 echo "It will take ~1 minute for DataVerse to start, "
 echo "Then you should be able to access your DataVerse instance on <Node IP>:$dataversePort"
 

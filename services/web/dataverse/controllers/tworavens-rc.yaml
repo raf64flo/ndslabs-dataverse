@@ -13,7 +13,7 @@ spec:
     spec:
       containers:
       - name: tworavens
-        image: ndslabs/dataverse-tworavens
+        image: ndslabs/dataverse-tworavens:1.0
         ports:
         - containerPort: 80
           protocol: TCP

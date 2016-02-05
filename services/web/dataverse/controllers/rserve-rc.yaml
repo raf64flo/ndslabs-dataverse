@@ -13,11 +13,9 @@ spec:
     spec:
       containers:
       - name: rserve
-        image: ndslabs/dataverse-rserve
+        image: ndslabs/dataverse-rserve:3.2.3
         ports:
         - containerPort: 6311
-          protocol: TCP
-        - containerPort: 80
           protocol: TCP
       volumes:
       - emptyDir:

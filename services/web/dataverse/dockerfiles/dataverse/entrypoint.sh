@@ -1,4 +1,11 @@
 #!/bin/bash
+
+#
+# Entrypoint script for DataVerse web application. This 
+# script will wait for required services (Rserve, Postgres, Solr)
+# before initializing the Glassfish server.
+#
+
 set -e
 
 TIMEOUT=30
@@ -74,14 +81,9 @@ else
         exit 1 
 fi
 
-echo "Using Rserve at $RSERVE_HOST:$RSERVE_PORT"
-echo "Using Solr at $SOLR_HOST:$SOLR_PORT"
-echo "Using Postgres at $POSTGRES_HOST:$POSTGRES_PORT"
-
 cd ~/dvinstall
 ./start-dataverse
 
-# For Docker, run glassfish verbose to foreground
-#/usr/local/glassfish4/bin/asadmin stop-domain domain1
-#/usr/local/glassfish4/bin/asadmin start-domain --verbose domain1
-while (ps -ef | grep glassfish | grep -v grep) ; do sleep 5; done
+# TODO: Need a way to foreground glassfish without redeploying war. 
+#       In the meantime, a simple loop to monitor the glassfish process
+while (ps -ef | grep glassfish | grep -v grep > /dev/null ) ; do sleep 5; done

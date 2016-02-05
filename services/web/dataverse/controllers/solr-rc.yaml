@@ -13,7 +13,7 @@ spec:
     spec:
       containers:
       - name: solr
-        image: ndslabs/dataverse-solr
+        image: ndslabs/dataverse-solr:4.6
         ports:
         - containerPort: 8983
           protocol: TCP
