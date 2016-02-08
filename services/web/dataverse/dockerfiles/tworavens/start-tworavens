@@ -102,6 +102,7 @@ while (<WEBAPPFILEIN>) {
     $_="var production=true;\n" if /^var production=false/;
     # rApache url:
     s/http:\/\/0.0.0.0:8000\/custom\//$RAPACHEURL\/custom\//g;
+    s/https:\/\/dataverse-demo.iq.harvard.edu/http:\/\/$RAPACHEURL/g;
     # dataverse url: 
     s/%PRODUCTION_DATAVERSE_URL%/$DATAVERSE_URL/g;
     print WEBAPPFILEOUT $_;

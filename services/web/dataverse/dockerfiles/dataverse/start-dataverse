@@ -324,35 +324,34 @@ print "Glassfish looks OK!\n";
 my $gf_heap_default = "2048";
 my $sys_mem_total   = 0;
 
-# TODO: Can't do this in a container under docker.  Need another way -- maybe declared?
-#if ( -e "/proc/meminfo" && open MEMINFO, "/proc/meminfo" ) {
-#    # Linux
-#
-#    while ( my $mline = <MEMINFO> ) {
-#        if ( $mline =~ /MemTotal:[ \t]*([0-9]*) kB/ ) {
-#            $sys_mem_total = $1;
-#        }
-#    }
-#
-#    close MEMINFO;
-#}
-#if ( $sys_mem_total > 0 ) {
-#    # setting the default heap size limit to 3/8 of the available
-#    # amount of memory:
-#    $gf_heap_default = ( int( $sys_mem_total / ( 8 / 3 * 1024 ) ) );
-#
-#    print "\nSetting the heap limit for Glassfish to " . $gf_heap_default . "MB. \n";
-#    print "You may need to adjust this setting to better suit \n";
-#    print "your system.\n\n";
-#
-#    #$gf_heap_default .= "m";
-#
-#}
-#else {
-#    print "\nCould not determine the amount of memory on your system.\n";
-#    print "Setting the heap limit for Glassfish to 2GB. You may need \n";
-#    print "to  adjust the value to better suit your system.\n\n";
-#}
+if ( -e "/proc/meminfo" && open MEMINFO, "/proc/meminfo" ) {
+    # Linux
+
+    while ( my $mline = <MEMINFO> ) {
+        if ( $mline =~ /MemTotal:[ \t]*([0-9]*) kB/ ) {
+            $sys_mem_total = $1;
+        }
+    }
+
+    close MEMINFO;
+}
+if ( $sys_mem_total > 0 ) {
+    # setting the default heap size limit to 3/8 of the available
+    # amount of memory:
+    $gf_heap_default = ( int( $sys_mem_total / ( 8 / 3 * 1024 ) ) );
+
+    print "\nSetting the heap limit for Glassfish to " . $gf_heap_default . "MB. \n";
+    print "You may need to adjust this setting to better suit \n";
+    print "your system.\n\n";
+
+    #$gf_heap_default .= "m";
+
+}
+else {
+    print "\nCould not determine the amount of memory on your system.\n";
+    print "Setting the heap limit for Glassfish to 2GB. You may need \n";
+    print "to  adjust the value to better suit your system.\n\n";
+}
 
 push @CONFIG_VARIABLES, "DEF_MEM_SIZE";
 $CONFIG_DEFAULTS{"DEF_MEM_SIZE"} = $gf_heap_default;
