@@ -1,5 +1,5 @@
 NAME = ndslabs\/dataverse-solr
-VERSION = 4.6  # Solr version
+VERSION = 4.2.3  # Dataverse version
 TAGNAME=$(NAME)\:$(VERSION)
 
 .PHONY: all build tag_latest 

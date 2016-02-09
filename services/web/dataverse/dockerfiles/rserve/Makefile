@@ -1,5 +1,5 @@
 NAME = ndslabs\/dataverse-rserve
-VERSION = 3.2.3  # R version
+VERSION = 4.2.3  # Dataverse version
 TAGNAME=$(NAME)\:$(VERSION)
 
 .PHONY: all build tag_latest 

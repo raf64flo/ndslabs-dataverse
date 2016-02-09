@@ -1,4 +1,10 @@
 #!/bin/bash
 
-cd /usr/local/solr-4.6.0/example/
-java -jar start.jar 
+if [ "$1" = 'solr' ]; then
+    cd /usr/local/solr-4.6.0/example/
+    java -jar start.jar 
+elif [ "$1" = 'usage' ]; then
+    echo  'docker run -d ndslabs/dataverse-solr solr'
+else
+    exec "$@"
+fi

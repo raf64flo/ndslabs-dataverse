@@ -27,8 +27,6 @@ Postgres
 * Customization points: Config data directory
 
 
-
-
 ### Building Docker images
 The dockerfiles subdirectory contains Dockerfiles and associated startup files (e.g., entrypoint.sh) for each of these services. Custom images have been created for each of the following:
 
@@ -38,6 +36,21 @@ The dockerfiles subdirectory contains Dockerfiles and associated startup files (
 * TwoRavens (ndslabs/tworavens): Apache httpd, rApache, R core, required R packages, TwoRavens application
 
 Postgres 9.3 is used from an official image. 
+
+To build all custom images:
+```
+cd services/web/dataverse/dockerfiles
+make 
+```
+
+To build individual images:
+```
+cd services/web/dataverse/dockerfiles/<image>
+make
+```
+
+### Versioning
+All custom images will have the Dataverse version 4.2.3.
 
 ### Starting Dataverse Services under Kubernetes
 

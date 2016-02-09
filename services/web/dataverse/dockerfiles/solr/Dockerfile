@@ -12,6 +12,13 @@ RUN cd /tmp && wget https://archive.apache.org/dist/lucene/solr/4.6.0/solr-4.6.0
 	wget -q --no-check-certificate https://github.com/IQSS/dataverse/raw/master/conf/solr/4.6.0/schema.xml  && \
 	rm /tmp/solr-4.6.0.tgz
 
+RUN ln -s /usr/local/solr-4.6.0/example/logs /var/log/solr
+
+VOLUME  /usr/local/solr-4.6.0/example/solr/
+
 EXPOSE 8983
 COPY entrypoint.sh /
-ENTRYPOINT "/entrypoint.sh"
+
+
+ENTRYPOINT ["/entrypoint.sh"]
+CMD ["solr"]

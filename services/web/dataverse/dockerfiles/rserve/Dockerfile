@@ -8,30 +8,7 @@ RUN rpm -Uvh https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.
 	yum install -y mesa-libGL-devel mesa-libGLU-devel libpng-devel  && \
         yum install -y mysql-devel postgresql-devel libxml2-devel libcurl-devel  
 
-# For Two-Ravens
-#RUN yum install -y mysql-devel postgresql-devel libxml2-devel libcurl-devel  && \
-#	yum install -y httpd-devel libapreq2 && \
-#	yum install -y rpm-build make httpd-devel libapreq2-devel 
-
-
-# Build RApache 
-#RUN cd /tmp && wget https://github.com/jeffreyhorner/rapache/archive/v1.2.6.tar.gz -O rapache-1.2.6.tar.gz  && \
-#	tar xzvf rapache-1.2.6.tar.gz rapache-1.2.6/rpm/rapache.spec --strip-components 2 && \
-#	mkdir -p ~/rpmbuild/SOURCES && \
-#	mkdir -p ~/rpmbuild/SPECS && \
-#	mv -f rapache-1.2.6.tar.gz ~/rpmbuild/SOURCES/ && \
-#	mv -f rapache.spec ~/rpmbuild/SPECS/ && \
-# 	rpmbuild -ba ~/rpmbuild/SPECS/rapache.spec && \
-# 	cd ~/rpmbuild/RPMS/x86_64/ && \
-#	rpm -ivh rapache-1.2.6-rpm0.x86_64.rpm 
-
-# Download TwoMasters
-#RUN cd /tmp && rm -f master.zip && \
-#	wget https://github.com/IQSS/TwoRavens/archive/master.zip && \
-#	unzip master.zip && \
-#	rm -f master.zip && \
-#	mv TwoRavens-master /var/www/html/dataexplore
-
+# Install dependent packages for Dataverse
 RUN R -q -e "install.packages(c('R2HTML'), INSTALL_opts=c('--no-test-load'), repos='http://cran.r-project.org', quiet=T, dependencies=T)"
 RUN R -q -e "install.packages(c('Rserve'), INSTALL_opts=c('--no-test-load'), repos='http://cran.r-project.org', quiet=T, dependencies=T)"
 RUN R -q -e "install.packages(c('VGAM'), INSTALL_opts=c('--no-test-load'), repos='http://cran.r-project.org', quiet=T, dependencies=T)"
@@ -62,7 +39,4 @@ RUN cd /tmp/  && \
 
 EXPOSE 6311
 
-#COPY start-tworavens /
-#COPY entrypoint.sh /
-#ENTRYPOINT ["/entrypoint.sh"]
 CMD ["R", "CMD", "Rserve.dbg", "--vanilla"]
