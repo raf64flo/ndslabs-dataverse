@@ -424,9 +424,12 @@ if ($newdb) {
    system( "/bin/cp -f dataverse-none.war " . $glassfish_dir . "/glassfish/domains/domain1/autodeploy/dataverse.war" );
 }
 
+
+print "sleeping for 60...\n"
 sleep(60);
 
 if ($newdb) {
+   print "Initializing postgres database\n";
    # Initialize postgres database
    my $psql_init_command =
        $psql_exec
@@ -509,7 +512,8 @@ unless ( socket( SOCK, PF_INET, SOCK_STREAM, $rserve_proto )
     exit 0;
 }
 
-system( $CONFIG_DEFAULTS{'GLASSFISH_DIRECTORY'} . "/bin/asadmin start-domain --verbose domain1" );
+#system( $CONFIG_DEFAULTS{'GLASSFISH_DIRECTORY'} . "/bin/asadmin stop-domain domain1" );
+#system( $CONFIG_DEFAULTS{'GLASSFISH_DIRECTORY'} . "/bin/asadmin start-domain --verbose domain1" );
 
 
 sub setup_glassfish {

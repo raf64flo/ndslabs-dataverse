@@ -52,7 +52,6 @@ VOLUME /usr/local/glassfish4/glassfish/domains/domain1/files
 
 COPY Dockerfile.dataverse /Dockerfile
 COPY FILES.dataverse/dataverse-init /root/dvinstall/
-COPY FILES.dataverse/glassfish-setup.sh /root/dvinstall/
 COPY FILES.dataverse/entrypoint.sh /
 
 EXPOSE      8080 

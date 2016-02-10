@@ -101,6 +101,10 @@ if [ "$1" = 'dataverse' ]; then
     cd ~/dvinstall
     ./dataverse-init
 
+    #TODO: Need a way to foreground glassfish without redeploying war. 
+    #       In the meantime, a simple loop to monitor the glassfish process
+    while (ps -ef | grep glassfish | grep -v grep > /dev/null ) ; do sleep 5; done
+
 elif [ "$1" = 'usage' ]; then
     echo  'docker run -d -p 8080:8080 --link rserve:rserve --link postgres:postgres --link solr:solr -e "SMTP_HOST=smtp.ncsa.illinois.edu" -e "HOST_DNS_ADDRESS=localhost" -e "MAIL_SERVER=smtp.ncsa.illinois.edu" -e "POSTGRES_DATABASE=dvndb" -e "POSTGRES_USER=dvnapp" -e "POSTGRES_PASSWORD=secret" -e "RSERVE_USER=rserve" -e "RSERVE_PASSWORD=rserve" --name=dataverse  ndslabs/dataverse dataverse'
 
