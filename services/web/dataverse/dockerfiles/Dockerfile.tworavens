@@ -1,4 +1,4 @@
-FROM ndslabs/dataverse-rserve:3.2.3
+FROM ndslabs/dataverse-rserve
 MAINTAINER Craig Willis (willis8@illinois.edu)
 
 
@@ -26,6 +26,7 @@ RUN cd /tmp && rm -f master.zip && \
 
 EXPOSE 80
 
-COPY start-tworavens /
-COPY entrypoint.sh /
+COPY Dockerfile.tworavens /Dockerfile
+COPY FILES.tworavens/start-tworavens /
+COPY FILES.tworavens/entrypoint.sh /
 ENTRYPOINT ["/entrypoint.sh"]

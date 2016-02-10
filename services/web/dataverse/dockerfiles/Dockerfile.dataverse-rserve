@@ -30,8 +30,8 @@ RUN cd /tmp && wget https://github.com/IQSS/Zelig/archive/master.zip && unzip ma
 RUN /usr/sbin/groupadd -g 97 -o -r rserve 
 RUN /usr/sbin/useradd -g rserve -o -r -d /usr/lib64/R/library -s /bin/bash -c "Rserve User" -u 97 rserve 
 
-COPY Rserv.conf /tmp/
-COPY Rserv.pwd /tmp/
+COPY Dockerfile.dataverse-rserve /Dockerfile
+COPY FILES.dataverse-rserve/Rserv.* /tmp/
 
 RUN cd /tmp/  && \
         install -o rserve -g rserve /tmp/Rserv.conf /etc/Rserv.conf && \ 

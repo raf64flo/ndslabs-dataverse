@@ -12,7 +12,6 @@ RUN yum install -y \
     unzip \
     wget
 
-
 ENV GLASSFISH_DOWNLOAD_SHA1 d1a103d06682eb08722fbc9a93089211befaa080
 ENV GLASSFISH_DIRECTORY "/usr/local/glassfish4"
 
@@ -38,7 +37,7 @@ RUN cd /tmp \
 
 # Customized persistence xml to avoid database recreation
 RUN mkdir -p /tmp/WEB-INF/classes/META-INF/ 
-COPY WEB-INF/classes/META-INF/persistence.xml /tmp/WEB-INF/classes/META-INF/
+COPY FILES.dataverse/WEB-INF/classes/META-INF/persistence.xml /tmp/WEB-INF/classes/META-INF/
 
 # Install DataVerse WAR
 RUN  cd ~ \
@@ -51,9 +50,10 @@ RUN ln -s /usr/local/glassfish4/glassfish/domains/domain1/logs /var/log/datavers
 
 VOLUME /usr/local/glassfish4/glassfish/domains/domain1/files
 
-COPY dataverse-init /root/dvinstall/
-COPY glassfish-setup.sh /root/dvinstall/
-COPY entrypoint.sh /
+COPY Dockerfile.dataverse /Dockerfile
+COPY FILES.dataverse/dataverse-init /root/dvinstall/
+COPY FILES.dataverse/glassfish-setup.sh /root/dvinstall/
+COPY FILES.dataverse/entrypoint.sh /
 
 EXPOSE      8080 
 

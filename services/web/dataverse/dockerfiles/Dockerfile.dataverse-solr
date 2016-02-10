@@ -17,8 +17,9 @@ RUN ln -s /usr/local/solr-4.6.0/example/logs /var/log/solr
 VOLUME  /usr/local/solr-4.6.0/example/solr/
 
 EXPOSE 8983
-COPY entrypoint.sh /
 
+COPY Dockerfile.dataverse-solr /Dockerfile
+COPY FILES.dataverse-solr/entrypoint.sh /
 
 ENTRYPOINT ["/entrypoint.sh"]
 CMD ["solr"]

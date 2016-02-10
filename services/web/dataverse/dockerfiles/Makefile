@@ -1,6 +1,4 @@
-SUBDIRS = dataverse rserve solr tworavens
+HUBIMAGES=dataverse dataverse-rserve dataverse-solr tworavens
+IMAGES=$(HUBIMAGES) 
 
-subdirs:
-	for dir in $(SUBDIRS); do \
-          $(MAKE) -C $$dir; \
-        done
+include ../../../../devtools/Makefiles/Makefile.nds
