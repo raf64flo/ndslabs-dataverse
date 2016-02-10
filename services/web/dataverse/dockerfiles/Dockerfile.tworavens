@@ -1,4 +1,4 @@
-FROM ndslabs/dataverse-rserve
+FROM ndslabs/dataverse-rserve:latest
 MAINTAINER Craig Willis (willis8@illinois.edu)
 
 
