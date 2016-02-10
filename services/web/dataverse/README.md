@@ -4,29 +4,6 @@ This is an experimental Kubernetes-based implemention of the [Dataverse](http://
 
 This is a preliminary implementation of the [Dataverse installation process](http://guides.dataverse.org/en/latest/installation/). Dataverse itself is a Java-based web application deployed under the Glassfish application server. It requires installations of Postgres, Solr 4.6.0, and R/Rserve. Dataverse optionally integrates with TwoRavens -- a Javascript-based application that runs under Apache/rApache and requires R shared librares.
 
-### Component requirements
-
-Dataverse
-* Process: asadmin (glassfish
-* Volumes: /usr/local/glassfish4/glassfish/domains/domain1/files
-* Logfiles: /usr/local/glassfish4/glassfish/domains/domain1/logs
-* Customization points?
-* Relations: Solr 4.6, PostGres, R/Rserve?, TwoRavens (optional)
-
-Solr 4.6
-* Process: java -jar start.jar
-* Volumes: /usr/local/solr-4.6.0/example/solr/
-* Logfiles: /usr/local/solr-4.6.0/example/logs
-* Customization points: DataVerse-specific schema in solr/collection1/conf/schema.xml
-* Relations: none
-
-Postgres
-* Process: ?
-* Volumes: /var/lib/postgresql/data  
-* Logfiles: /var/log/postgresql/?
-* Customization points: Config data directory
-
-
 ### Building Docker images
 The dockerfiles subdirectory contains Dockerfiles and associated startup files (e.g., entrypoint.sh) for each of these services. Custom images have been created for each of the following:
 
@@ -43,14 +20,9 @@ cd services/web/dataverse/dockerfiles
 make 
 ```
 
-To build individual images:
-```
-cd services/web/dataverse/dockerfiles/<image>
-make
-```
 
 ### Versioning
-All custom images will have the Dataverse version 4.2.3.
+All images currently have version "latest"
 
 ### Starting Dataverse Services under Kubernetes
 
