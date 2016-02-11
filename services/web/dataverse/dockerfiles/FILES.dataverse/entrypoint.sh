@@ -100,6 +100,7 @@ if [ "$1" = 'dataverse' ]; then
     
     cd ~/dvinstall
     ./dataverse-init
+    echo "\nDataverse started"
 
     #TODO: Need a way to foreground glassfish without redeploying war. 
     #       In the meantime, a simple loop to monitor the glassfish process
