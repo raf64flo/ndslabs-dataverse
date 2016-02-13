@@ -1,31 +1,58 @@
 #!/bin/bash
 #!/bin/bash
 
-TIMEOUT=30
 
-EXTERNAL_IP=$(curl http://api.ipify.org)
+set -e
 
-DATAVERSE_PORT=30000
-TWORAVENS_PORT=30001
-DATAVERSE_URL="http://$EXTERNAL_IP:$DATAVERSE_PORT"
-export DATAVERSE_URL;
+if [ "$1" = 'tworavens' ]; then
 
-TWORAVENS_URL="http://$EXTERNAL_IP:$TWORAVENS_PORT"
-export TWORAVENS_URL;
+  TIMEOUT=30
 
-echo $DATAVERSE_URL
-echo $TWORAVENS_URL
+  EXTERNAL_IP=$(curl http://api.ipify.org)
 
-# Both DataVerse and TwoRavens need the external address/port for 
-# each other.  Ports assumed via NodePort (DataVerse = 30000, TwoRavens = 30001)
-if ncat $EXTERNAL_IP $DATAVERSE_PORT -w $TIMEOUT --send-only < /dev/null ; then
-        echo DataVerse running;
-	curl -X PUT -d $TWORAVENS_URL/dataexplore/gui.html $DATAVERSE_URL/api/admin/settings/:TwoRavensUrl
+  DATAVERSE_PORT=30000
+  TWORAVENS_PORT=30001
+  DATAVERSE_URL="http://$EXTERNAL_IP:$DATAVERSE_PORT"
+  export DATAVERSE_URL;
+
+  TWORAVENS_URL="http://$EXTERNAL_IP:$TWORAVENS_PORT"
+  export TWORAVENS_URL;
+
+  echo $DATAVERSE_URL
+  echo $TWORAVENS_URL
+
+  if ncat $EXTERNAL_IP $DATAVERSE_PORT -w $TIMEOUT --send-only < /dev/null ; then
+    echo Glassfish running;
+
+    # We need a better way to handle creation-order dependencies, but for now
+    # poll the Dataverse instance until the webapp responds
+    i=0;
+    while [ "$(curl -Is $DATAVERSE_URL/resources/images/dataverseproject_logo.jpg | grep "^HTTP" | cut -f2 -d' ')" != "200" ]; do
+      echo "Waiting for Dataverse..."
+      sleep 10
+  
+      if [ $i -eq 10 ] ; then
+         echo "Error: timeout waiting for Dataverse to start"
+         exit 1;
+         break;
+      fi
+
+      i=$(($i+1))
+    done
+
+    echo "Dataverse running"
+    curl -X PUT -d $TWORAVENS_URL/dataexplore/gui.html $DATAVERSE_URL/api/admin/settings/:TwoRavensUrl
+    # Configure TwoRavens to use DataVerse (and DataVerse to use TwoRavens)
+    echo "Starting TwoRavens"
+    /start-tworavens
+    httpd -DFOREGROUND
+
+  else
+    echo Error: Dataverse is not running
+    exit 1;
+  fi
 else
-        echo Unable to register TwoRavens through DataVerse API
-	curl -X PUT -d $TWORAVENS_URL/dataexplore/gui.html $DATAVERSE_URL/api/admin/settings/:TwoRavensUrl
+    exec "$@"
 fi
 
-# Configure TwoRavens to use DataVerse (and DataVerse to use TwoRavens)
-/start-tworavens
-httpd -DFOREGROUND
+

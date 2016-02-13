@@ -30,3 +30,4 @@ COPY Dockerfile.tworavens /Dockerfile
 COPY FILES.tworavens/start-tworavens /
 COPY FILES.tworavens/entrypoint.sh /
 ENTRYPOINT ["/entrypoint.sh"]
+CMD ["tworavens"]
