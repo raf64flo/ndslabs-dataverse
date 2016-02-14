@@ -36,6 +36,13 @@ spec:
           value : "rserve"
         - name: RSERVE_PASSWORD 
           value : "rserve"
+        readinessProbe:
+          httpGet:
+            path: /resources/images/dataverseproject_logo.jpg
+            port: 8080
+            scheme: HTTP
+          initialDelaySeconds: 60
+          timeoutSeconds: 120
       volumes:
       - emptyDir:
           medium: ""

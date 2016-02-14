@@ -4,6 +4,8 @@
 # for dependent services (Rserve, Postgres, Solr) to start before
 # initializing Glassfish.
 
+
+
 set -e
 
 if [ "$1" = 'dataverse' ]; then
@@ -11,8 +13,6 @@ if [ "$1" = 'dataverse' ]; then
 
     TIMEOUT=30
 
-    # Need to handle environment variables created using standard
-    # Docker linking as well as Kubernetes.
 
     if [ -n "$RSERVE_SERVICE_HOST" ]; then
 	    RSERVE_HOST=$RSERVE_SERVICE_HOST
@@ -100,7 +100,17 @@ if [ "$1" = 'dataverse' ]; then
     
     cd ~/dvinstall
     ./dataverse-init
-    echo "\nDataverse started"
+
+    TWORAVENS_PORT=30001
+    if [ -n "$TWORAVENS_PORT" ]; then
+            EXTERNAL_IP=$(curl http://api.ipify.org)
+            #TWORAVENS_PORT=30001
+            TWORAVENS_URL="http://$EXTERNAL_IP:$TWORAVENS_PORT"
+            echo "Using TwoRavens at $TWORAVENS_URL"
+            curl -s -X PUT -d $TWORAVENS_URL/dataexplore/gui.html http://localhost:8080/api/admin/settings/:TwoRavensUrl
+    fi
+
+    echo "Dataverse started"
 
     #TODO: Need a way to foreground glassfish without redeploying war. 
     #       In the meantime, a simple loop to monitor the glassfish process
