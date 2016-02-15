@@ -110,7 +110,7 @@ if [ "$1" = 'dataverse' ]; then
             curl -s -X PUT -d $TWORAVENS_URL/dataexplore/gui.html http://localhost:8080/api/admin/settings/:TwoRavensUrl
     fi
 
-    echo "Dataverse started"
+    echo -e "\n\nDataverse started"
 
     #TODO: Need a way to foreground glassfish without redeploying war. 
     #       In the meantime, a simple loop to monitor the glassfish process
