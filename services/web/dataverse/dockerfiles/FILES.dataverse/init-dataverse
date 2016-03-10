@@ -44,3 +44,4 @@ system("./init-glassfish");
 
 system("./setup-all.sh");
 
+system ("curl -s -X PUT -d " . $CONFIG_DEFAULTS{'SOLR_HOST'} . ":" . $CONFIG_DEFAULTS{'SOLR_PORT'} . " http://localhost:8080/api/admin/settings/:SolrHostColonPort");
