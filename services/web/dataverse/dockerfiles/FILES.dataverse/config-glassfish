@@ -1,0 +1,37 @@
+#!/bin/bash
+
+
+GLASSFISH_BIN_DIR=$GLASSFISH_DIRECTORY/bin
+pushd $GLASSFISH_BIN_DIR
+
+./asadmin create-domain --nopassword domain1
+./asadmin $ASADMIN_OPTS start-domain domain1
+
+./asadmin $ASADMIN_OPTS delete-jvm-options "-XX\:MaxPermSize=192m"
+./asadmin $ASADMIN_OPTS create-jvm-options "-XX\:MaxPermSize=512m"
+./asadmin $ASADMIN_OPTS create-jvm-options "-XX\:PermSize=256m"
+
+./asadmin $ASADMIN_OPTS create-jvm-options "\-Ddoi.password=apitest"
+./asadmin $ASADMIN_OPTS create-jvm-options "\-Ddoi.username=apitest"
+./asadmin $ASADMIN_OPTS create-jvm-options "\-Ddoi.baseurlstring=https\://ezid.cdlib.org"
+
+./asadmin $ASADMIN_OPTS set server-config.network-config.protocols.protocol.http-listener-1.http.comet-support-enabled="true"
+./asadmin $ASADMIN_OPTS delete-connector-connection-pool --cascade=true jms/__defaultConnectionFactory-Connection-Pool
+./asadmin $ASADMIN_OPTS create-connector-connection-pool --steadypoolsize 1 --maxpoolsize 250  \
+		--poolresize 2 --maxwait 60000 --raname jmsra --connectiondefinition javax.jms.QueueConnectionFactory \
+			jms/IngestQueueConnectionFactoryPool
+
+./asadmin $ASADMIN_OPTS create-connector-resource --poolname jms/IngestQueueConnectionFactoryPool \
+		--description "ingest connector resource" jms/IngestQueueConnectionFactory
+
+./asadmin $ASADMIN_OPTS create-admin-object --restype javax.jms.Queue --raname jmsra \
+		--description "sample administered object" --property Name=DataverseIngest jms/DataverseIngest
+
+./asadmin $ASADMIN_OPTS create-jvm-options "\-Ddataverse.auth.password-reset-timeout-in-minutes=60"
+./asadmin $ASADMIN_OPTS create-jvm-options "\-Djavax.xml.parsers.SAXParserFactory=com.sun.org.apache.xerces.internal.jaxp.SAXParserFactoryImpl"
+
+./asadmin $ASADMIN_OPTS create-network-listener --protocol http-listener-1 --listenerport 8009 --jkenabled true jk-connector
+
+./asadmin $ASADMIN_OPTS stop-domain domain1
+
+popd

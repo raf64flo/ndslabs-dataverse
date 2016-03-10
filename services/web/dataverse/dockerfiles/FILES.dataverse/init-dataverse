@@ -1,0 +1,46 @@
+#!/usr/bin/perl
+
+use strict;
+use warnings;
+use Getopt::Long;
+use Socket;
+use File::Copy;
+
+my @CONFIG_VARIABLES = (
+    'HOST_DNS_ADDRESS',
+    'GLASSFISH_DIRECTORY',
+    'MAIL_SERVER',
+    'RSERVE_HOST',
+    'RSERVE_PORT',
+    'RSERVE_USER',
+    'RSERVE_PASSWORD',
+    'SOLR_HOST',
+    'SOLR_PORT',
+);
+
+
+my %CONFIG_DEFAULTS = (
+    'HOST_DNS_ADDRESS',    'localhost',
+    'GLASSFISH_DIRECTORY', '/usr/local/glassfish4',
+    'MAIL_SERVER',         '',
+    'RSERVE_HOST',     'localhost',
+    'RSERVE_PORT',     6311,
+    'RSERVE_USER',     'rserve',
+    'RSERVE_PASSWORD', 'rserve'
+);
+
+# Config always from ENV
+for my $ENTRY (@CONFIG_VARIABLES) {
+    if (!$ENV{$ENTRY}) {
+    	$ENV{$ENTRY} = $CONFIG_DEFAULTS{$ENTRY};
+    } else {
+    	$CONFIG_DEFAULTS{$ENTRY} = $ENV{$ENTRY};
+    }
+}
+
+system("./init-postgres");
+
+system("./init-glassfish");
+
+system("./setup-all.sh");
+

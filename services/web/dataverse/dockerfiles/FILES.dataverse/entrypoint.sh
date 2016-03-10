@@ -99,7 +99,7 @@ if [ "$1" = 'dataverse' ]; then
     fi
     
     cd ~/dvinstall
-    ./dataverse-init
+    ./init-dataverse
 
     TWORAVENS_PORT=30001
     if [ -n "$TWORAVENS_PORT" ]; then

@@ -1,0 +1,33 @@
+#!/bin/bash
+
+GLASSFISH_BIN_DIR=$GLASSFISH_DIRECTORY/bin
+pushd $GLASSFISH_BIN_DIR
+
+
+./asadmin $ASADMIN_OPTS start-domain domain1
+
+./asadmin $ASADMIN_OPTS create-jvm-options "-Xmx${DEF_MEM_SIZE}m"
+
+./asadmin $ASADMIN_OPTS create-jdbc-connection-pool --restype javax.sql.DataSource \
+    --datasourceclassname org.postgresql.ds.PGPoolingDataSource \
+    --property create=true:User=$POSTGRES_USER:PortNumber=$POSTGRES_PORT:databaseName=$POSTGRES_DATABASE:password=$POSTGRES_PASSWORD:ServerName=$POSTGRES_HOST \
+    dvnDbPool
+
+./asadmin $ASADMIN_OPTS create-jdbc-resource --connectionpoolid dvnDbPool jdbc/VDCNetDS
+
+./asadmin $ASADMIN_OPTS set configs.config.server-config.ejb-container.ejb-timer-service.timer-datasource=jdbc/VDCNetDS
+
+./asadmin $ASADMIN_OPTS create-jvm-options "\-Ddataverse.files.directory=${FILES_DIR}"
+./asadmin $ASADMIN_OPTS create-jvm-options "\-Ddataverse.rserve.host=${RSERVE_HOST}"
+./asadmin $ASADMIN_OPTS create-jvm-options "\-Ddataverse.rserve.port=${RSERVE_PORT}"
+./asadmin $ASADMIN_OPTS create-jvm-options "\-Ddataverse.rserve.user=${RSERVE_USER}"
+./asadmin $ASADMIN_OPTS create-jvm-options "\-Ddataverse.rserve.password=${RSERVE_PASSWORD}"
+./asadmin $ASADMIN_OPTS create-jvm-options "\-Ddataverse.fqdn=${HOST_DNS_ADDRESS}"
+
+
+./asadmin $ASADMIN_OPTS create-javamail-resource --mailhost "$MAIL_SERVER" --mailuser "dataversenotify" --fromaddress "do-not-reply@${HOST_DNS_ADDRESS}" mail/notifyMailSession
+
+echo "Deploying dataverse.war"
+./asadmin $ASADMIN_OPTS deploy ~/dvinstall/dataverse.war
+
+popd
