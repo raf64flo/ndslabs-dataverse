@@ -3,6 +3,7 @@
 GLASSFISH_BIN_DIR=$GLASSFISH_DIRECTORY/bin
 pushd $GLASSFISH_BIN_DIR
 
+FILES_DIR=$GLASSFISH_DIRECTORY/glassfish/domains/domain1/files
 
 ./asadmin $ASADMIN_OPTS start-domain domain1
 

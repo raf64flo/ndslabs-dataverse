@@ -92,4 +92,5 @@ $CONFIG_DEFAULTS{"DEF_MEM_SIZE"} = $gf_heap_default;
 
 system("./config-glassfish");
 
+system( "/bin/cp -Rf jhoveConfig.xsd " . $CONFIG_DEFAULTS{"GLASSFISH_DIRECTORY"} . "/glassfish/domains/domain1/config" );
 system( "/bin/cp -Rf jhove.conf " . $CONFIG_DEFAULTS{"GLASSFISH_DIRECTORY"} . "/glassfish/domains/domain1/config" );

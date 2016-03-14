@@ -10,9 +10,7 @@ set -e
 
 if [ "$1" = 'dataverse' ]; then
 
-
     TIMEOUT=30
-
 
     if [ -n "$RSERVE_SERVICE_HOST" ]; then
 	    RSERVE_HOST=$RSERVE_SERVICE_HOST
@@ -37,8 +35,7 @@ if [ "$1" = 'dataverse' ]; then
     if ncat $RSERVE_HOST $RSERVE_PORT -w $TIMEOUT --send-only < /dev/null > /dev/null 2>&1 ; then 
 	    echo Rserve running; 
     else
-	    echo Required service Rserve not running. Have you started the required services?
-            exit 1 
+	    echo Optional service Rserve not running. 
     fi
     
     
@@ -67,7 +64,7 @@ if [ "$1" = 'dataverse' ]; then
 	    echo Postgres running; 
     else
 	    echo Required service Postgres not running. Have you started the required services?
-            exit 1 
+        exit 1 
     fi
     
     # solr
@@ -95,11 +92,16 @@ if [ "$1" = 'dataverse' ]; then
 	    echo Solr running; 
     else
 	    echo Required service Solr not running. Have you started the required services?
-            exit 1 
+        exit 1 
     fi
+
     
     cd ~/dvinstall
     ./init-dataverse
+
+	if [ -n "$IRODS_SERVER" -o -n "$ICAT_PORT_1247_TCP_PORT" ]; then
+		./setup-irods.sh
+	fi
 
     TWORAVENS_PORT=$TWORAVENS_NODE_PORT
     if [ -n "$TWORAVENS_PORT" ]; then
@@ -112,9 +114,8 @@ if [ "$1" = 'dataverse' ]; then
 
     echo -e "\n\nDataverse started"
 
-    #TODO: Need a way to foreground glassfish without redeploying war. 
-    #       In the meantime, a simple loop to monitor the glassfish process
-    while (ps -ef | grep glassfish | grep -v grep > /dev/null ) ; do sleep 5; done
+
+	sleep infinity
 
 elif [ "$1" = 'usage' ]; then
     echo  'docker run -d -p 8080:8080 --link rserve:rserve --link postgres:postgres --link solr:solr -e "SMTP_HOST=smtp.ncsa.illinois.edu" -e "HOST_DNS_ADDRESS=localhost" -e "MAIL_SERVER=smtp.ncsa.illinois.edu" -e "POSTGRES_DATABASE=dvndb" -e "POSTGRES_USER=dvnapp" -e "POSTGRES_PASSWORD=secret" -e "RSERVE_USER=rserve" -e "RSERVE_PASSWORD=rserve" --name=dataverse  ndslabs/dataverse dataverse'

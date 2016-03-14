@@ -3,6 +3,7 @@ MAINTAINER Craig Willis (willis8@illinois.edu)
 
 # Install dependencies
 RUN yum install -y \
+    cronie \
     git \
     java-1.8.0-openjdk-devel \
     nc \
@@ -46,6 +47,10 @@ RUN  cd ~ \
 
 RUN ln -s /usr/local/glassfish4/glassfish/domains/domain1/logs /var/log/dataverse
 
+# Install iRods iCommands
+RUN  cd /tmp \
+   && yum -y install epel-release \
+   && yum -y install ftp://ftp.renci.org/pub/irods/releases/4.1.6/centos7/irods-icommands-4.1.6-centos7-x86_64.rpm 
 
 COPY FILES.dataverse/config-glassfish /root/dvinstall
 COPY FILES.dataverse/config-dataverse /root/dvinstall
@@ -58,6 +63,7 @@ COPY FILES.dataverse/init-postgres /root/dvinstall
 COPY FILES.dataverse/init-glassfish /root/dvinstall
 COPY FILES.dataverse/init-dataverse /root/dvinstall
 COPY FILES.dataverse/setup-all.sh /root/dvinstall
+COPY FILES.dataverse/setup-irods.sh /root/dvinstall
 
 COPY FILES.dataverse/entrypoint.sh /
 COPY Dockerfile.dataverse /Dockerfile
