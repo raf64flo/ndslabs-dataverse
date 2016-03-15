@@ -1,0 +1,8 @@
+FROM ndslabs/irods-icat:latest
+MAINTAINER willis8@illinois.edu
+
+COPY FILES.icat/irods_setup.pl /var/lib/irods/iRODS/scripts/perl/irods_setup.pl
+COPY FILES.icat/entrypoint.sh /
+
+EXPOSE 1247
+CMD ["/entrypoint.sh", "icat"]
