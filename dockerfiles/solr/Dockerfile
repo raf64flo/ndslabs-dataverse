@@ -19,7 +19,7 @@ VOLUME  /usr/local/solr-4.6.0/example/solr/collection1/data
 EXPOSE 8983
 
 COPY Dockerfile.dataverse-solr /Dockerfile
-COPY FILES.dataverse-solr/entrypoint.sh /
+COPY entrypoint.sh /
 
 ENTRYPOINT ["/entrypoint.sh"]
 CMD ["solr"]

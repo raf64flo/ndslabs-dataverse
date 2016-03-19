@@ -3,8 +3,8 @@
 mkdir -p ~/.irods
 cat << EOF > ~/.irods/irods_environment.json
 {
-    "irods_host": "$ICAT_PORT_1247_TCP_ADDR",
-    "irods_port": $ICAT_PORT_1247_TCP_PORT,
+    "irods_host": "$IRODS_ADDRESS",
+    "irods_port": $IRODS_PORT,
     "irods_user_name": "$IRODS_USER",
     "irods_zone_name": "$IRODS_ZONE"
 }

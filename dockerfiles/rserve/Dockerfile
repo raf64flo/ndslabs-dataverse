@@ -49,7 +49,7 @@ RUN /usr/sbin/groupadd -g 97 -o -r rserve  && \
     /usr/sbin/useradd -g rserve -o -r -d /usr/lib64/R/library -s /bin/bash -c "Rserve User" -u 97 rserve 
 
 COPY Dockerfile.dataverse-rserve /Dockerfile
-COPY FILES.dataverse-rserve/Rserv.* /tmp/
+COPY Rserv.* /tmp/
 
 RUN cd /tmp/  && \
     install -o rserve -g rserve /tmp/Rserv.conf /etc/Rserv.conf && \ 

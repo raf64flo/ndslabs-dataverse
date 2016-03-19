@@ -37,7 +37,7 @@ RUN cd /tmp \
 
 # Customized persistence xml to avoid database recreation
 RUN mkdir -p /tmp/WEB-INF/classes/META-INF/ 
-COPY FILES.dataverse/WEB-INF/classes/META-INF/persistence.xml /tmp/WEB-INF/classes/META-INF/
+COPY WEB-INF/classes/META-INF/persistence.xml /tmp/WEB-INF/classes/META-INF/
 
 # Install DataVerse WAR
 RUN  cd ~ \
@@ -52,20 +52,20 @@ RUN  cd /tmp \
    && yum -y install epel-release \
    && yum -y install ftp://ftp.renci.org/pub/irods/releases/4.1.6/centos7/irods-icommands-4.1.6-centos7-x86_64.rpm 
 
-COPY FILES.dataverse/config-glassfish /root/dvinstall
-COPY FILES.dataverse/config-dataverse /root/dvinstall
+COPY config-glassfish /root/dvinstall
+COPY config-dataverse /root/dvinstall
 
 RUN cd /root/dvinstall && ./config-dataverse
 
 VOLUME /usr/local/glassfish4/glassfish/domains/domain1/files
-COPY FILES.dataverse/ddl /root/dvinstall
-COPY FILES.dataverse/init-postgres /root/dvinstall
-COPY FILES.dataverse/init-glassfish /root/dvinstall
-COPY FILES.dataverse/init-dataverse /root/dvinstall
-COPY FILES.dataverse/setup-all.sh /root/dvinstall
-COPY FILES.dataverse/setup-irods.sh /root/dvinstall
+COPY ddl /root/dvinstall
+COPY init-postgres /root/dvinstall
+COPY init-glassfish /root/dvinstall
+COPY init-dataverse /root/dvinstall
+COPY setup-all.sh /root/dvinstall
+COPY setup-irods.sh /root/dvinstall
 
-COPY FILES.dataverse/entrypoint.sh /
+COPY entrypoint.sh /
 COPY Dockerfile.dataverse /Dockerfile
 
 EXPOSE      8080 

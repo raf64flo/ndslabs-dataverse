@@ -27,7 +27,7 @@ RUN cd /tmp && rm -f master.zip && \
 EXPOSE 80
 
 COPY Dockerfile.tworavens /Dockerfile
-COPY FILES.tworavens/start-tworavens /
-COPY FILES.tworavens/entrypoint.sh /
+COPY start-tworavens /
+COPY entrypoint.sh /
 ENTRYPOINT ["/entrypoint.sh"]
 CMD ["tworavens"]

@@ -1,6 +1,6 @@
 ## Dataverse 4.2.3
 
-This is an experimental Kubernetes-based implemention of the [Dataverse](http://dataverse.org/) and [TwoRavens](http://datascience.iq.harvard.edu/about-tworavens) services. Dataverse is a web-based application used for sharing, preserving, citing, exploring, and analyzying research data. 
+This is a preliminary implementation of the [Dataverse](http://dataverse.org/) and [TwoRavens](http://datascience.iq.harvard.edu/about-tworavens) services in Docker for use with the NDS Labs system. Dataverse is a web-based application used for sharing, preserving, citing, exploring, and analyzying research data. 
 
 This is a preliminary implementation of the [Dataverse installation process](http://guides.dataverse.org/en/latest/installation/). Dataverse itself is a Java-based web application deployed under the Glassfish application server. It requires installations of Postgres, Solr 4.6.0, and R/Rserve. Dataverse optionally integrates with TwoRavens -- a Javascript-based application that runs under Apache/rApache and requires R shared librares.
 
@@ -14,34 +14,48 @@ The dockerfiles subdirectory contains Dockerfiles and associated startup files (
 
 Postgres 9.3 is used from an official image. 
 
-To build all custom images:
+To build the custom images:
 ```
-cd services/web/dataverse/dockerfiles
-make 
+cd dockerfiles
+build.sh  
 ```
 
 Since these images have been pushed to Dockerhub, this step is only necessary if testing the build process or making changes to the images.
 
 
-### Versioning
-All images currently have version "latest"
+### Starting Dataverse under Docker
 
-### Starting Dataverse Services under Kubernetes
 
-A simple script has been provided to start these services under Kubernetes:
-
+Start a standard postgres container:
 ```
-start-dataverse.sh
+docker run --name=postgres -d  postgres:9.3
 ```
-This will start each of the Kubernetes services and replication controllers.
 
-Note:
-* If you are running this for the first time, image downloaded may take several minutes. 
-* The dataverse webapp will take a few minutes to initialize and startup.  You can view the logs using kubectl logs -f <dataverse-rc-pod>.
-* Once the services are running, you should be able to access your Dataverse instance on <host>:30000. 
+Start a Solr 4.6 container for Dataverse:
+```
+docker run --name=solr -d ndslabs/dataverse-solr:latest
+```
+
+Start optional Rserve container:
+```
+docker run --name=rserve -d ndslabs/dataverse-rserve:latest
+```
+
+Start optional TwoRavens container:
+```
+docker run --name=tworavens -d ndslabs/dataverse-tworavens:latest
+```
+
+Start dataverse using the "link" flag to specify the other containers. Environment variables are used to setup the DVN database, user, and password
+```
+docker run -p 8080:8080 -d --link solr:solr --link postgres:postgres --link rserve:rserve --link tworavens:tworavens -e "POSTGRES_DATABASE=dvndb" -e "POSTGRES_USER=dvnapp" -e "POSTGRES_PASSWORD=secret"  --name=dataverse  ndslabs/dataverse:4.2.3 dataverse
+```
+
+If you run "docker logs -f dataverse" you can wait for the "Dataverse started" message.
+
 
 ### Simple test case
-* Open <host>:30000 in your browser
+* Open <host>:8080 in your browser
 * Login using the default dataverseAdmin/admin username and password
 * From this interface, you can create dataverses, add users, groups, permissions, etc. 
 * For now, we'll simply upload a file
@@ -54,8 +68,6 @@ Note:
 * The TwoRavens interface should display a network of variables.
 
 
-
-
 ### What's different
 The following changes were made to the Dataverse application:
 * Dataverse: Heavily customized startup process based on the dvinstall/install script.
@@ -63,12 +75,3 @@ The following changes were made to the Dataverse application:
 * Dataverse: Custom WAR with persistence.xml to avoid database recreation by EclipseLink on restart
 * TwoRavens: Customized startup process based on the original install.pl
 * TwoRavens: endpoint.sh reads Kubernetes-supplied environment variables and connects to required services
-
-
-### Open issues
-* Can't access /proc/meminfo
-* TwoRavens and Dataverse both need the public address/port of each service for integration.  This is currently achieved through the use of Kubernetes NodePort and a hack to tworavens/endpoint.sh to read the public IP of the host. This opens questions about use of Kubernetes to host publicly accessible services.
-* This implementation does not include Shibboleth
-* Older versions of DataVerse rely on Rserve, but this integration is no longer apparent in 4.2.3
-* Volumes are currently not implemented
-
