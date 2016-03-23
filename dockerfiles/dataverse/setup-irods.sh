@@ -13,6 +13,6 @@ EOF
 iinit $IRODS_PASSWORD
 
 /usr/sbin/crond
-echo "irsync -r /usr/local/glassfish4/glassfish/domains/domain1/files/ i:dataverse" > /irsync.sh
+echo "irsync -r /usr/local/glassfish4/glassfish/domains/domain1/files/ i:dvn_preservation/" > /irsync.sh
 chmod +x /irsync.sh
 echo "*/5 * * * * /irsync.sh >> /irsync.log" | crontab
