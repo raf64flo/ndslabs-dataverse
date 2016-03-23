@@ -35,7 +35,7 @@ myArchiveRule {
        }
        isColl(*DestColl,*Status);
        msiDataObjCopy(*Src1,*Dest1,"destRescName=*Res++++forceFlag=", *Status);
-       msiSetACL("default","own","odum_fed#dfcmain", *Dest1);
+       msiSetACL("default","own","PRESERVATION_USER#RODS_ZONE", *Dest1);
        msiDataObjChksum(*Dest1, "forceChksum=", *Chksum);
        if (*Check != *Chksum) {
          writeLine("*Lfile", "Bad checksum for file *Dest1");

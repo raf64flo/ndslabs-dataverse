@@ -26,7 +26,7 @@ sed -i "s/PRESERVATION_ZONE/$PRESERVATION_ZONE/g" /opt/dataverse/bitcurator.r
 # Create the preservation user
 iadmin mkuser $PRESERVATION_USER rodsuser
 iadmin moduser $PRESERVATION_USER password $PRESERVATION_PASSWORD
-iadmin mkzone $PRESERVATION_ZONE remote $PRESERVATION_SERVER_NAME:$PRESERVATION_SERVER_PORT
+iadmin mkzone $PRESERVATION_ZONE remote $PRESERVATION_SERVER:$PRESERVATION_SERVER_PORT
 
 mv ~/.irods ~/.irods.rods
 
@@ -80,5 +80,4 @@ EOF
 curl --user admin:admin -X POST -d @/tmp/local_federation.json $PRESERVATION_SERVER_IP:8080/federation
 
 
-/usr/sbin/crond
 echo "*/5 * * * * /opt/dataverse/archive.sh >> /archive.log" | crontab

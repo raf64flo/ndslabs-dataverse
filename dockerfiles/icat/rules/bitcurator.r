@@ -82,5 +82,5 @@ cleanup(*Addr, *tempStr, *outFeatDir, *prefixStr, *status) {
        }
 }
 
-INPUT *Coll="/RODS_ZONE/home/PRESERVATION_USER/bitcuratortmp", *outFeatDir="/RODS_ZONEdvnZone/home/PRESERVATION_USER/bitcurator_output"
+INPUT *Coll="/RODS_ZONE/home/PRESERVATION_USER/bitcuratortmp", *outFeatDir="/RODS_ZONE/home/PRESERVATION_USER/bitcurator_output"
 OUTPUT ruleExecOut

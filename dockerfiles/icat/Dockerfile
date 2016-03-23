@@ -3,7 +3,7 @@ MAINTAINER willis8@illinois.edu
 
 # Install bulk_extractor
 
-RUN apt-get update -y && apt-get install -y openjdk-7-jdk curl
+RUN apt-get update -y && apt-get install -y openjdk-7-jdk curl 
 
 # http://container-solutions.com/6-dockerfile-tips-official-images/
 RUN apt-get install -y flex make g++ libssl-dev \
