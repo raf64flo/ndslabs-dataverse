@@ -1,4 +1,4 @@
-myStagingRule {
+myArchiveRule {
 # Loop over files in a collection, *Src 
 # Put all files into a staging collection. *Dest
   *Len = strlen(*Src);
@@ -8,7 +8,7 @@ myStagingRule {
   msiGetSystemTime(*TimeA,"unix");
 
 #============ create a collection for log files if it does not exist ===============
-  *LPath = "/dvnZone/home/dataverse/staging_logs";
+  *LPath = "/RODS_ZONE/home/PRESERVATION_USER/archive_logs";
   isColl(*LPath,*Status);
 
 #============ create file into which results will be written =========================
@@ -22,26 +22,7 @@ myStagingRule {
     *File = *Row.DATA_NAME;
     *Check = *Row.DATA_CHECKSUM;
     *Coll = *Row.COLL_NAME;
-    *Path = "*Coll/*File";
-    *Q1 = select count(META_DATA_ATTR_VALUE) where DATA_NAME = '*File' and COLL_NAME = '*Coll' and META_DATA_ATTR_NAME = 'Staged';
-    *Process = 0;
-    *Staged = "0";
-    *Num = "0";
-    foreach(*R1 in *Q1) {
-       *Num = *R1.META_DATA_ATTR_VALUE;
-       if(*Num == "0") {
-          *Process = 1;
-       } else {
-          *Q2 = select META_DATA_ATTR_VALUE, META_DATA_CREATE_TIME where DATA_NAME = '*File' and COLL_NAME = '*Coll' and META_DATA_ATTR_NAME = 'Staged';
-          *DataModify = *Row.DATA_MODIFY_TIME;
-          foreach(*R2 in *Q2) {
-             *Staged = *R2.META_DATA_ATTR_VALUE;
-             *MetaDataCreateTime = *R2.META_DATA_CREATE_TIME;
-            if(*Staged == "0" || double(*DataModify) > double(*MetaDataCreateTime)) { *Process = 1; }
-          }
-       }
-    }
-    if(*Coll != "*LPath" && *Process == 1) {
+    if(*Coll != "*LPath") {
        *L1 = strlen(*Coll);
        *Src1 = *Coll ++ "/" ++ *File;
        *C1 = substr(*Coll,*Len,*L1);
@@ -54,24 +35,13 @@ myStagingRule {
        }
        isColl(*DestColl,*Status);
        msiDataObjCopy(*Src1,*Dest1,"destRescName=*Res++++forceFlag=", *Status);
-       # with inheritance enabled, shouldn't need to set ACLs
-       #msiSetACL("default","own","odum_fed#dfcmain", *Dest1);
-       writeLine("stdout","*Dest1");
+       msiSetACL("default","own","odum_fed#dfcmain", *Dest1);
        msiDataObjChksum(*Dest1, "forceChksum=", *Chksum);
        if (*Check != *Chksum) {
          writeLine("*Lfile", "Bad checksum for file *Dest1");
+	 writeLine("stdout", "*Check doesn't match *Chksum");
        }
-       else { writeLine("*Lfile", "Moved file *Src1 to *Dest1");
-          if(*Staged != "1" && *Num != "0") {
-             *Str0 = "Staged=*Staged";
-             msiString2KeyValPair(*Str0,*KVP);
-             msiRemoveKeyValPairsFromObj(*KVP,*Path,"-d");
-          }
-          if(*Num == "0") {
-             *Str1 = "Staged=1";
-             msiString2KeyValPair(*Str1,*KVP);
-             msiAssociateKeyValuePairsToObj(*KVP,*Path,"-d");
-          }
+       else {
           writeLine("*Lfile","*Src1 copied to *Dest1 *Check *TimeH");
        }
      }
@@ -88,5 +58,5 @@ isColl (*LPath,*Status) {
     }  # end of check on status
   }  # end of log collection creation
 }
-INPUT *Res=$"dvnResc", *Src=$"/dvnZONE/home/dataverse/stage/dvn_backuppreservation", *Dest =$"/STAGING_RODS_ZONE/home/dataverse/dvn_backuppreservation"
+INPUT *Res="demoResc", *Src="/RODS_ZONE/home/PRESERVATION_USER/dvn_preservation", *Dest="/PRESERVATION_ZONE/RODS_ZONE/dvn_preservation"
 OUTPUT ruleExecOut

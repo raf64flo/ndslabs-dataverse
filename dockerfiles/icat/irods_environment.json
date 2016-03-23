@@ -1,6 +1,0 @@
-{
-    "irods_host": "RODS_HOST",
-    "irods_port": RODS_PORT,
-    "irods_user_name": "RODS_USER",
-    "irods_zone_name": "RODS_ZONE"
-}

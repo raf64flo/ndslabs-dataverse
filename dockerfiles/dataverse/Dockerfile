@@ -66,7 +66,7 @@ COPY setup-all.sh /root/dvinstall
 COPY setup-irods.sh /root/dvinstall
 
 COPY entrypoint.sh /
-COPY Dockerfile.dataverse /Dockerfile
+COPY Dockerfile /
 
 EXPOSE      8080 
 

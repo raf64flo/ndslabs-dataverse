@@ -99,7 +99,7 @@ if [ "$1" = 'dataverse' ]; then
     cd ~/dvinstall
     ./init-dataverse
 
-	if [ -n "$IRODS_ADDRESS" ]; then
+	if [ -n "$DVICAT_PORT_1247_TCP_PORT" ]; then
 		./setup-irods.sh
 	fi
 
