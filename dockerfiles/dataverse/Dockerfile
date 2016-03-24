@@ -15,6 +15,11 @@ RUN yum install -y \
 
 ENV GLASSFISH_DOWNLOAD_SHA1 d1a103d06682eb08722fbc9a93089211befaa080
 ENV GLASSFISH_DIRECTORY "/usr/local/glassfish4"
+ENV HOST_DNS_ADDRESS "localhost"
+ENV POSTGRES_DATABASE "dvndb"
+ENV POSTGRES_USER "dvnapp"
+ENV RSERVE_USER "rserve"
+ENV RSERVE_PASSWORD "rserve"
 
 # Install Glassfish 4.1
 RUN cd /tmp \ 

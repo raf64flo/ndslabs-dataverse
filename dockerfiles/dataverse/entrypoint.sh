@@ -10,6 +10,9 @@ set -e
 
 if [ "$1" = 'dataverse' ]; then
 
+	export GLASSFISH_DIRECTORY=/usr/local/glassfish4
+	export HOST_DNS_ADDRESS=localhost
+
     TIMEOUT=30
 
     if [ -n "$RSERVE_SERVICE_HOST" ]; then
