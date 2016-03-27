@@ -3,7 +3,7 @@ MAINTAINER willis8@illinois.edu
 
 # Install bulk_extractor
 
-RUN apt-get update -y && apt-get install -y openjdk-7-jdk curl 
+RUN apt-get update -y && apt-get install -y openjdk-7-jdk curl supervisor
 
 # http://container-solutions.com/6-dockerfile-tips-official-images/
 RUN apt-get install -y flex make g++ libssl-dev \
@@ -24,6 +24,7 @@ RUN mkdir /opt/dataverse
 COPY rules /opt/dataverse/
 COPY setup-irods.sh /opt/dataverse/
 COPY archive.sh /opt/dataverse/
+COPY supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 COPY entrypoint.sh /
 
 EXPOSE 1247
