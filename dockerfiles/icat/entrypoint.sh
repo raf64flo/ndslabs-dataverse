@@ -23,9 +23,8 @@ if [ "$1" = 'icat' ]; then
 
     /opt/dataverse/setup-irods.sh
 
-	service cron start
     # this script must end with a persistent foreground process
-	sleep infinity
+	/usr/bin/supervisord
 
 else
     exec "$@"
