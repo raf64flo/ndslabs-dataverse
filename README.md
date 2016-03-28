@@ -4,7 +4,7 @@ This is a preliminary implementation of the [Dataverse](http://dataverse.org/) a
 
 This is a preliminary implementation of the [Dataverse installation process](http://guides.dataverse.org/en/latest/installation/). Dataverse itself is a Java-based web application deployed under the Glassfish application server. It requires installations of Postgres, Solr 4.6.0, and R/Rserve. Dataverse optionally integrates with TwoRavens -- a Javascript-based application that runs under Apache/rApache and requires R shared librares.
 
-### Building Docker images
+### Docker images
 The dockerfiles subdirectory contains Dockerfiles and associated startup files (e.g., entrypoint.sh) for each of these services. Custom images have been created for each of the following:
 
 * Dataverse webapp (ndslabs/dataverse): Glassfish 4.1 + Dataverse webapp
@@ -14,6 +14,15 @@ The dockerfiles subdirectory contains Dockerfiles and associated startup files (
 * iRODS iCAT (ndslabs/dvicat): iCAT server with bitcurator bulk_extractor and custom archiving rules.
 
 Postgres 9.3 is used from an official image. 
+
+### See also
+
+* [Service definitions](https://github.com/nds-org/ndslabs-specs/tree/master/dataverse) for the NDS Labs service catalog.
+
+
+### Kubernetes definitions
+
+The service and replication controller specifications have been retained for historical purposes only.  These are no longer used by the NDS Labs system.
 
 
 ### Starting Dataverse under Docker
