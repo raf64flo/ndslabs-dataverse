@@ -58,7 +58,7 @@ cp /etc/irods/server_config.json /etc/irods/server_config.orig
 curl --user admin:admin $PRESERVATION_SERVER_IP:8080/federation > /opt/dataverse/nds-dvn-federation.json
 cat /etc/irods/server_config.orig | jq  --argfile fed /opt/dataverse/nds-dvn-federation.json  '.federation |= [$fed]' | jq '.re_rulebase_set |= . + [{"filename": "dataverse"}]' > /etc/irods/server_config.json
 #cat /etc/irods/server_config.orig | jq  --argfile fed /opt/dataverse/nds-dvn-federation.json  '.federation |= [$fed]'  > /etc/irods/server_config.json
-PRESERVATION_SERVER=`jq -q '.icat_host' /opt/dataverse/nds-dvn-federation.json`
+PRESERVATION_SERVER=`jq -r '.icat_host' /opt/dataverse/nds-dvn-federation.json`
 echo "$PRESERVATION_SERVER_IP $PRESERVATION_SERVER" >> /etc/hosts
 
 
