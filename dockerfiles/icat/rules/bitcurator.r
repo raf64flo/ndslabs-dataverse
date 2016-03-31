@@ -14,9 +14,10 @@ bcExtractFeatureFilesRule {
     *CollPath = *row.COLL_NAME;
     *Resource = *row.DATA_RESC_NAME;
     *File = *row.DATA_NAME;
-    *CreateTime = *row.DATA_CREATE_TIME;
+    *CreateTime = int(*row.DATA_CREATE_TIME);
 
-    if ( int(*CreateTime) < int(*now - CRON_FREQUENCY*60) ) {
+    *CheckTime = *now - CRON_FREQUENCY*60;
+    if (*CreateTime > *CheckTime ) {
 
       writeLine("stdout", "Path = *Path, Resource= *Resource");
 # Make another query for IP Address of the resource
@@ -65,7 +66,7 @@ bcExtractFeatureFilesRule {
           cleanup(*Addr, *tempStr, *outFeatDir, *prefixStr, *status);
       }
     } else {
-      writeLine("stdout", "Skipping file *CreateTime < *now - 60");
+      writeLine("stdout", "Skipping file *CreateTime < *CheckTime");
     }
   }
 }
