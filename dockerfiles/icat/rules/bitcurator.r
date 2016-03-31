@@ -3,62 +3,67 @@ bcExtractFeatureFilesRule {
 # expects a working directory, currently /tmp/bcworking specified below,
 # to exist and be writable by the user running the script.
   *Cmd="bulk_extractor";
-  *timeStamp = double (time());
+  *now = double (time());
   msiGetSystemTime(*reportTimeStamp,"human");
 # Now Make a query to get the path to the image and the resource name
 # DATA_PATH: Physical path name for digital object in resource
 # DATA_RESC_NAME: Logical name of storage resource
-  *Query = select DATA_NAME,DATA_PATH,DATA_RESC_NAME,COLL_NAME where COLL_NAME like '*Coll%';
+  *Query = select DATA_NAME,DATA_PATH,DATA_RESC_NAME,COLL_NAME,DATA_CREATE_TIME where COLL_NAME like '*Coll%';
   foreach (*row in *Query) {
     *Path = *row.DATA_PATH;
     *CollPath = *row.COLL_NAME;
     *Resource = *row.DATA_RESC_NAME;
-    *File = *row.DATA_NAME
-    writeLine("stdout", "Path = *Path, Resource= *Resource");
+    *File = *row.DATA_NAME;
+    *CreateTime = *row.DATA_CREATE_TIME;
+
+    if ( int(*CreateTime) < int(*now - CRON_FREQUENCY*60) ) {
+
+      writeLine("stdout", "Path = *Path, Resource= *Resource");
 # Make another query for IP Address of the resource
 # RESC_LOC: Resource IP Address
 # DATA_RESC_NAME: Logical name of storage resource
-    *Query2 = select RESC_LOC where DATA_RESC_NAME = '*Resource';
-    foreach (*row in *Query2) {
-      *Addr = *row.RESC_LOC;
-      writeLine("stdout", "ADDR = *Addr, Resource= *Resource");
-    }
-    *prefixStr = "*File" ++ "*timeStamp$userNameClient";
-    *tempStr = "/tmp/bcworking/*prefixStr" ++ "outFeatDir";
-    *Arg1 = execCmdArg(*Path);    # Image
-    *Arg2 = execCmdArg("-o");
-    *Arg3 = execCmdArg(*tempStr); # Output Feature Directory
-    writeLine("stdout", "Running Bulk Extractor Tool...");
-    writeLine("stdout", "Command: *Cmd *Arg1 *Arg2 *Arg3");
-    #msiExecCmd("bcMkdir.sh",*tempStr, "null", "null", "null", *Result);
-    if (errorcode(msiExecCmd(*Cmd,"*Arg1 *Arg2 *Arg3","null","null","null",*Result)) < 0) {
-        if(errormsg(*Result,*msg)==0) {
-            msiGetStderrInExecCmdOut(*Result,*Out);
-            writeLine("stdout", "ERROR:*Out");
-        } else {
-            writeLine("stdout", "Result msg is empty");
-        }
-    } else {
-        # Command executed successfully
-        msiGetStdoutInExecCmdOut(*Result,*Out);
-        writeLine("stdout", "Output is *Out ");
-        # run shell script to list iRODS path to files suspected to contain PII or CCN
-        msiExecCmd("bcListSuspectedSensitive.sh", *s1, "null", "null", "null", *SResult);
-        msiGetStdoutInExecCmdOut(*SResult, *Out);
-        *s = split(*Out, "\n");
-        *i = 0;
-        foreach (*item in *s) {
-          writeLine("stdout", "Debug: Suspected sensitive file: *item");
-          #addAVUMetadata(*item, "CURATOR_REVIEW", "Sensitive", "*reportTimeStamp", *Status);
-          *i = *i + 1;
-        }
-        if (*i > 0) {
-          # e-mail archivist with list of suspected sensitive files
-          writeLine("stdout", "Sending email to *Archivist");
-          msiSendMail("*Archivist","Suspected sensitive data","*s");
-        }
-        # remove working subdirectories
-        cleanup(*Addr, *tempStr, *outFeatDir, *prefixStr, *status);
+      *Query2 = select RESC_LOC where DATA_RESC_NAME = '*Resource';
+      foreach (*row in *Query2) {
+        *Addr = *row.RESC_LOC;
+        writeLine("stdout", "ADDR = *Addr, Resource= *Resource");
+      }
+      *prefixStr = "*File" ++ "*now$userNameClient";
+      *tempStr = "/tmp/bcworking/*prefixStr" ++ "outFeatDir";
+      *Arg1 = execCmdArg(*Path);    # Image
+      *Arg2 = execCmdArg("-o");
+      *Arg3 = execCmdArg(*tempStr); # Output Feature Directory
+      writeLine("stdout", "Running Bulk Extractor Tool...");
+      writeLine("stdout", "Command: *Cmd *Arg1 *Arg2 *Arg3");
+      #msiExecCmd("bcMkdir.sh",*tempStr, "null", "null", "null", *Result);
+      if (errorcode(msiExecCmd(*Cmd,"*Arg1 *Arg2 *Arg3","null","null","null",*Result)) < 0) {
+          if(errormsg(*Result,*msg)==0) {
+              msiGetStderrInExecCmdOut(*Result,*Out);
+              writeLine("stdout", "ERROR:*Out");
+          } else {
+              writeLine("stdout", "Result msg is empty");
+          }
+      } else {
+          # Command executed successfully
+          msiGetStdoutInExecCmdOut(*Result,*Out);
+          writeLine("stdout", "Output is *Out ");
+          # run shell script to list iRODS path to files suspected to contain PII or CCN
+          msiExecCmd("bcListSuspectedSensitive.sh", *s1, "null", "null", "null", *SResult);
+          msiGetStdoutInExecCmdOut(*SResult, *Out);
+          *s = split(*Out, "\n");
+          *i = 0;
+          foreach (*item in *s) {
+            writeLine("stdout", "Debug: Suspected sensitive file: *item");
+            addAVUMetadata(*item, "CURATOR_REVIEW", "Sensitive", "*reportTimeStamp", *Status);
+            *i = *i + 1;
+          }
+          if (*i > 0) {
+            # e-mail archivist with list of suspected sensitive files
+            writeLine("stdout", "Sending email to *Archivist");
+            msiSendMail("*Archivist","Suspected sensitive data","*s");
+          }
+          # remove working subdirectories
+          cleanup(*Addr, *tempStr, *outFeatDir, *prefixStr, *status);
+      }
     }
   }
 }
