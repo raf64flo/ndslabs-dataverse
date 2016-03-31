@@ -2,7 +2,7 @@
 
 Resources to deploy Dataverse in Kubernetes or [NDS Labs](https://github.com/nds-org/ndslabs).
 
-This is a preliminary implementation of the [Dataverse](http://dataverse.org/) with  [TwoRavens](http://datascience.iq.harvard.edu/about-tworavens) and [iRODS](http://irods.org/) integration for use with the NDS Labs system. 
+This is a preliminary implementation of the [Dataverse](http://dataverse.org/) with  [TwoRavens](http://datascience.iq.harvard.edu/about-tworavens) and [iRODS](http://irods.org/) integration for use with the NDS Labs system. The Dataverse/iRODS integration is based on work by the Odum Institute and RENCI.
 
 ## Dockerfiles
 A set of images used to deploy Dataverse, TwoRavens, and iRODS in [NDS Labs](https://github.com/nds-org/ndslabs).
