@@ -29,7 +29,7 @@ sed -i "s/RODS_ZONE/$RODS_ZONE/g" /var/lib/irods/iRODS/server/bin/cmd/bcListSusp
 # Create the preservation user
 iadmin mkuser $PRESERVATION_USER rodsuser
 iadmin moduser $PRESERVATION_USER password $PRESERVATION_PASSWORD
-iadmin mkzone $PRESERVATION_ZONE remote $PRESERVATION_SERVER:$PRESERVATION_SERVER_PORT
+iadmin mkzone $PRESERVATION_ZONE remote $PRESERVATION_SERVER_IP:$PRESERVATION_SERVER_PORT
 
 mv ~/.irods ~/.irods.rods
 
@@ -53,12 +53,13 @@ iinit $PRESERVATION_PASSWORD
 cp /usr/local/bin/bulk_extractor /var/lib/irods/iRODS/server/bin/cmd
 
 # Federate with the preservation server
-echo "$PRESERVATION_SERVER_IP $PRESERVATION_SERVER" >> /etc/hosts
 cp /etc/irods/server_config.json /etc/irods/server_config.orig
 
 curl --user admin:admin $PRESERVATION_SERVER_IP:8080/federation > /opt/dataverse/nds-dvn-federation.json
 cat /etc/irods/server_config.orig | jq  --argfile fed /opt/dataverse/nds-dvn-federation.json  '.federation |= [$fed]' | jq '.re_rulebase_set |= . + [{"filename": "dataverse"}]' > /etc/irods/server_config.json
 #cat /etc/irods/server_config.orig | jq  --argfile fed /opt/dataverse/nds-dvn-federation.json  '.federation |= [$fed]'  > /etc/irods/server_config.json
+PRESERVATION_SERVER=`jq -q '.icat_host' /opt/dataverse/nds-dvn-federation.json`
+echo "$PRESERVATION_SERVER_IP $PRESERVATION_SERVER" >> /etc/hosts
 
 
 ZONE_NAME=`jq '.zone_name' /etc/irods/server_config.json`
