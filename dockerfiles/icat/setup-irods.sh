@@ -92,4 +92,6 @@ if [ -z "$CRON_FREQUENCY" ]; then
    CRON_FREQUENCY=5;
 fi 
 
+sed -i "s/CRON_FREQUENCY/$CRON_FREQUENCY/g" /opt/dataverse/bitcurator.r
+
 echo "*/$CRON_FREQUENCY * * * * /opt/dataverse/archive.sh >> /archive.log" | crontab
