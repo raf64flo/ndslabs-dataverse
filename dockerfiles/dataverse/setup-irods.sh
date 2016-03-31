@@ -12,7 +12,11 @@ EOF
 
 iinit $PRESERVATION_PASSWORD
 
+if [ -z "$CRON_FREQUENCY" ]; then
+   CRON_FREQUENCY=5;
+fi
+
 /usr/sbin/crond
 echo "irsync -rK /usr/local/glassfish4/glassfish/domains/domain1/files/ i:dvn_preservation/" > /irsync.sh
 chmod +x /irsync.sh
-echo "*/5 * * * * /irsync.sh >> /irsync.log" | crontab
+echo "*/$CRON_FREQUENCY * * * * /irsync.sh >> /irsync.log" | crontab
