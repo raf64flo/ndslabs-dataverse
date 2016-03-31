@@ -16,7 +16,7 @@ bcExtractFeatureFilesRule {
     *File = *row.DATA_NAME;
     *CreateTime = int(*row.DATA_CREATE_TIME);
 
-    *CheckTime = *now - CRON_FREQUENCY*60;
+    *CheckTime = *now - CRON_FREQUENCY*60 + 1;
     if (*CreateTime > *CheckTime ) {
 
       writeLine("stdout", "Path = *Path, Resource= *Resource");
