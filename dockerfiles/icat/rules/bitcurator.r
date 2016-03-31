@@ -64,6 +64,8 @@ bcExtractFeatureFilesRule {
           # remove working subdirectories
           cleanup(*Addr, *tempStr, *outFeatDir, *prefixStr, *status);
       }
+    } else {
+      writeLine("stdout", "Skipping file *CreateTime < *now - 60");
     }
   }
 }
