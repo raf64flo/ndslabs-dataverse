@@ -87,4 +87,8 @@ echo "FromLineOverride=YES" >> /etc/ssmtp/ssmtp.conf
 curl --user admin:admin -X POST -d @/tmp/local_federation.json $PRESERVATION_SERVER_IP:8080/federation
 
 
-echo "*/5 * * * * /opt/dataverse/archive.sh >> /archive.log" | crontab
+if [ -z "$CRON_FREQUENCY" ]; then
+   CRON_FREQUENCY=5;
+fi 
+
+echo "*/$CRON_FREQUENCY * * * * /opt/dataverse/archive.sh >> /archive.log" | crontab

@@ -46,13 +46,17 @@ bcExtractFeatureFilesRule {
         msiExecCmd("bcListSuspectedSensitive.sh", *s1, "null", "null", "null", *SResult);
         msiGetStdoutInExecCmdOut(*SResult, *Out);
         *s = split(*Out, "\n");
+        *i = 0;
         foreach (*item in *s) {
           writeLine("stdout", "Debug: Suspected sensitive file: *item");
-	  addAVUMetadata(*item, "CURATOR_REVIEW", "Sensitive", "*reportTimeStamp", *Status);
-	}
-        # e-mail archivist with list of suspected sensitive files
-        writeLine("stdout", "Sending email to *Archivist");
-        msiSendMail("*Archivist","Suspected sensitive data","*s");
+          #addAVUMetadata(*item, "CURATOR_REVIEW", "Sensitive", "*reportTimeStamp", *Status);
+          *i = *i + 1;
+        }
+        if (*i > 0) {
+          # e-mail archivist with list of suspected sensitive files
+          writeLine("stdout", "Sending email to *Archivist");
+          msiSendMail("*Archivist","Suspected sensitive data","*s");
+        }
         # remove working subdirectories
         cleanup(*Addr, *tempStr, *outFeatDir, *prefixStr, *status);
     }
@@ -72,13 +76,13 @@ cleanup(*Addr, *tempStr, *outFeatDir, *prefixStr, *status) {
       # Shell script bcListDir is used to list the files in the
       # temporary directory created in /tmp (on UNIX: /bin/ls -1 $dir)
       *a1 = execCmdArg(*tempStr);
-      writeLine("stdout", "Calling script bcListDir with arg *a1");
+      #writeLine("stdout", "Calling script bcListDir with arg *a1");
       #msiExecCmd("bcListDir.sh",*a1, "null", "null", "null", *Result);
       msiExecCmd("bcListDir.sh",*a1, "null", "null", "null", *Result);
       msiGetStdoutInExecCmdOut(*Result, *Out);
       # Call split to put the listed files in an array
       *a = split(*Out, "\n");
-      writeLine("stdout", "Debug: Files in the array are  *a ");
+      #writeLine("stdout", "Debug: Files in the array are  *a ");
       foreach (*item in *a) {
          *path = *tempStr++"/"++*item;
          msiSplitPath(*path, *Coll, *file);
@@ -90,7 +94,7 @@ cleanup(*Addr, *tempStr, *outFeatDir, *prefixStr, *status) {
          # Copy the files from the /tmp/*outFeatDir location to the grid
          *new_outFeatPath = *new_outFeatDir++"/"++*file;
          # Call msiDataObjPut to do the copy of the file
-         writeLine("stdout", "Debug: copyFiles: Copying to file new_outFeatPath: *new_outFeatPath");
+         #writeLine("stdout", "Debug: copyFiles: Copying to file new_outFeatPath: *new_outFeatPath");
          msiDataObjPut(*new_outFeatPath, "null", *local, *status);
       }
       # Remove working dirs
