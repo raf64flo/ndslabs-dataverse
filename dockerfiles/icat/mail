@@ -1,0 +1,12 @@
+#!/bin/bash
+
+body=$(</dev/stdin)
+
+cat << EOF | /usr/sbin/ssmtp $3
+To: $3
+From: $3
+Subject: $2
+
+$body
+
+EOF

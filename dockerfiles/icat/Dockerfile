@@ -20,12 +20,16 @@ RUN apt-get install -y flex make g++ libssl-dev \
 
 RUN wget https://github.com/stedolan/jq/releases/download/jq-1.5/jq-linux64 -O /usr/bin/jq && chmod +x /usr/bin/jq
 
-RUN mkdir /opt/dataverse
+RUN mkdir /opt/dataverse && mkdir /tmp/bcworking && chmod a+w /tmp/bcworking
 COPY rules /opt/dataverse/
 COPY setup-irods.sh /opt/dataverse/
 COPY archive.sh /opt/dataverse/
 COPY supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 COPY entrypoint.sh /
+COPY cmd/*sh /var/lib/irods/iRODS/server/bin/
+COPY mail /usr/bin/mail
+COPY rules/dataverse.re /etc/irods/
+
 
 EXPOSE 1247
 CMD ["/entrypoint.sh", "icat"]

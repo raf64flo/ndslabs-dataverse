@@ -8,7 +8,7 @@ myStagingRule {
   msiGetSystemTime(*TimeA,"unix");
 
 #============ create a collection for log files if it does not exist ===============
-  *LPath = "/dvnZone/home/dataverse/archive_logs";
+  *LPath = "/RODS_ZONE/home/PRESERVATION_USER/archive_logs";
   isColl2(*LPath,*Status);
 
 #============ create file into which results will be written =========================
@@ -41,7 +41,7 @@ myStagingRule {
         *n = *R1.META_DATA_ATTR_ID;
         if (*n == "0") {
           msiDataObjCopy(*Src1,*Dest1,"destRescName=*Res++++forceFlag=", *Status);
-          msiSetACL("default","own","dataverse#dvnZone", *Dest1);
+          msiSetACL("default","own","PRESERVATION_USER#RODS_ZONE", *Dest1);
           msiDataObjChksum(*Dest1, "forceChksum=", *Chksum);
           if (*Check != *Chksum) {
             writeLine("*Lfile", "Bad checksum for file *Dest1");
@@ -55,7 +55,7 @@ myStagingRule {
             *o = *R2.META_DATA_ATTR_ID;
             if (*o != "0") {
               msiDataObjCopy(*Src1,*Dest1,"destRescName=*Res++++forceFlag=", *Status);
-              msiSetACL("default","own","odum_fed#dfcmain", *Dest1);
+              msiSetACL("default","own","PRESERVATION_USER#RODS_ZONE", *Dest1);
               msiDataObjChksum(*Dest1, "forceChksum=", *Chksum);
               if (*Check != *Chksum) {
                 writeLine("*Lfile", "Bad checksum for file *Dest1");
@@ -82,5 +82,5 @@ isColl2 (*LPath,*Status) {
     }  # end of check on status
   }  # end of log collection creation
 }
-INPUT *Res="demoResc", *Src="/dvnZone/home/dataverse/dvn_preservation", *Dest="/fedZone/dvnZone/dvn_preservation"
+INPUT *Res="demoResc", *Src="/RODS_ZONE/home/PRESERVATION_USER/dvn_preservation", *Dest="/PRESERVATION_ZONE/RODS_ZONE/dvn_preservation"
 OUTPUT ruleExecOut

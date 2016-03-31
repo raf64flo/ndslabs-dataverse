@@ -98,5 +98,5 @@ cleanup(*Addr, *tempStr, *outFeatDir, *prefixStr, *status) {
    }
 }
 
-INPUT *Coll="/dvnZone/home/dataverse/dvn_preservation", *outFeatDir="/dvnZone/home/dataverse/bitcurator_output", *Archivist="willis8@illinois.edu"
+INPUT *Coll="/RODS_ZONE/home/PRESERVATION_USER/dvn_preservation", *outFeatDir="/RODS_ZONE/home/PRESERVATION_USER/bitcurator_output", *Archivist="CURATOR_EMAIL"
 OUTPUT ruleExecOut

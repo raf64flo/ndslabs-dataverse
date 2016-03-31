@@ -23,6 +23,8 @@ sed -i "s/RODS_ZONE/$RODS_ZONE/g" /opt/dataverse/bitcurator.r
 sed -i "s/PRESERVATION_USER/$PRESERVATION_USER/g" /opt/dataverse/bitcurator.r
 sed -i "s/PRESERVATION_ZONE/$PRESERVATION_ZONE/g" /opt/dataverse/bitcurator.r
 
+set -i "s/RODS_ZONE/$RODS_ZONE/g" /var/lib/irods/iRODS/server/bin/cmdbcListSuspectedSensitive.sh
+
 # Create the preservation user
 iadmin mkuser $PRESERVATION_USER rodsuser
 iadmin moduser $PRESERVATION_USER password $PRESERVATION_PASSWORD
@@ -54,8 +56,8 @@ echo "$PRESERVATION_SERVER_IP $PRESERVATION_SERVER" >> /etc/hosts
 cp /etc/irods/server_config.json /etc/irods/server_config.orig
 
 curl --user admin:admin $PRESERVATION_SERVER_IP:8080/federation > /opt/dataverse/nds-dvn-federation.json
-#cat /etc/irods/server_config.orig | jq  --argfile fed /opt/dataverse/nds-dvn-federation.json  '.federation |= [$fed]' | jq '.re_rulebase_set |= . + [{"filename": "dataverse"}]' > /etc/irods/server_config.json
-cat /etc/irods/server_config.orig | jq  --argfile fed /opt/dataverse/nds-dvn-federation.json  '.federation |= [$fed]'  > /etc/irods/server_config.json
+cat /etc/irods/server_config.orig | jq  --argfile fed /opt/dataverse/nds-dvn-federation.json  '.federation |= [$fed]' | jq '.re_rulebase_set |= . + [{"filename": "dataverse"}]' > /etc/irods/server_config.json
+#cat /etc/irods/server_config.orig | jq  --argfile fed /opt/dataverse/nds-dvn-federation.json  '.federation |= [$fed]'  > /etc/irods/server_config.json
 
 
 ZONE_NAME=`jq '.zone_name' /etc/irods/server_config.json`
