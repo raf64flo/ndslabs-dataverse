@@ -22,8 +22,9 @@ sed -i "s/PRESERVATION_ZONE/$PRESERVATION_ZONE/g" /opt/dataverse/archive.r
 sed -i "s/RODS_ZONE/$RODS_ZONE/g" /opt/dataverse/bitcurator.r
 sed -i "s/PRESERVATION_USER/$PRESERVATION_USER/g" /opt/dataverse/bitcurator.r
 sed -i "s/PRESERVATION_ZONE/$PRESERVATION_ZONE/g" /opt/dataverse/bitcurator.r
+sed -i "s/CURATOR_EMAIL/$CURATOR_EMAIL/g" /opt/dataverse/bitcurator.r
 
-set -i "s/RODS_ZONE/$RODS_ZONE/g" /var/lib/irods/iRODS/server/bin/cmdbcListSuspectedSensitive.sh
+sed -i "s/RODS_ZONE/$RODS_ZONE/g" /var/lib/irods/iRODS/server/bin/cmd/bcListSuspectedSensitive.sh
 
 # Create the preservation user
 iadmin mkuser $PRESERVATION_USER rodsuser
@@ -77,6 +78,10 @@ cat << EOF > /tmp/local_federation.json
    }
 }
 EOF
+
+echo "mailhub=$SMTP_SERVER:25" >> /etc/ssmtp/ssmtp.conf
+echo "FromLineOverride=YES" >> /etc/ssmtp/ssmtp.conf
+
 
 # register this instance with the preservation server
 curl --user admin:admin -X POST -d @/tmp/local_federation.json $PRESERVATION_SERVER_IP:8080/federation

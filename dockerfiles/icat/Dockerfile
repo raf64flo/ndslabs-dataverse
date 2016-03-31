@@ -3,7 +3,7 @@ MAINTAINER willis8@illinois.edu
 
 # Install bulk_extractor
 
-RUN apt-get update -y && apt-get install -y openjdk-7-jdk curl supervisor
+RUN apt-get update -y && apt-get install -y openjdk-7-jdk curl supervisor ssmtp
 
 # http://container-solutions.com/6-dockerfile-tips-official-images/
 RUN apt-get install -y flex make g++ libssl-dev \
@@ -26,8 +26,10 @@ COPY setup-irods.sh /opt/dataverse/
 COPY archive.sh /opt/dataverse/
 COPY supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 COPY entrypoint.sh /
-COPY cmd/*sh /var/lib/irods/iRODS/server/bin/
+COPY cmd/*sh /var/lib/irods/iRODS/server/bin/cmd/
 COPY mail /usr/bin/mail
+COPY ssmtp.conf /etc/ssmtp.conf
+RUN  chmod +x /usr/bin/mail
 COPY rules/dataverse.re /etc/irods/
 
 
