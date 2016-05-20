@@ -58,6 +58,7 @@ RUN  cd /tmp \
    && yum -y install ftp://ftp.renci.org/pub/irods/releases/4.1.6/centos7/irods-icommands-4.1.6-centos7-x86_64.rpm 
 
 COPY config-glassfish /root/dvinstall
+COPY restart-glassfish /root/dvinstall
 COPY config-dataverse /root/dvinstall
 
 RUN cd /root/dvinstall && ./config-dataverse

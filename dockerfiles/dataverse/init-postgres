@@ -10,6 +10,8 @@ my @CONFIG_VARIABLES = (
     'POSTGRES_USER',
     'POSTGRES_PASSWORD',
     'GLASSFISH_DIRECTORY',
+    'SOLR_HOST',
+    'SOLR_PORT',
 );
 
 my %CONFIG_DEFAULTS = (
@@ -222,7 +224,7 @@ if ($newdb) {
    print "$psql_ddl_command\n";
 
    if ( my $exitcode = system($psql_ddl_command) == 0 ) {
-       print "Loaded reference data.\n";
+       print "Executed DDL.\n";
    } else {
    }
 

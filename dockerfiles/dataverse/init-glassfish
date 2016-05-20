@@ -7,7 +7,7 @@ FILES_DIR=$GLASSFISH_DIRECTORY/glassfish/domains/domain1/files
 
 ./asadmin $ASADMIN_OPTS start-domain domain1
 
-./asadmin $ASADMIN_OPTS create-jvm-options "-Xmx${DEF_MEM_SIZE}m"
+#./asadmin $ASADMIN_OPTS create-jvm-options "-Xmx${DEF_MEM_SIZE}m"
 
 ./asadmin $ASADMIN_OPTS create-jdbc-connection-pool --restype javax.sql.DataSource \
     --datasourceclassname org.postgresql.ds.PGPoolingDataSource \
@@ -25,6 +25,7 @@ FILES_DIR=$GLASSFISH_DIRECTORY/glassfish/domains/domain1/files
 ./asadmin $ASADMIN_OPTS create-jvm-options "\-Ddataverse.rserve.password=${RSERVE_PASSWORD}"
 ./asadmin $ASADMIN_OPTS create-jvm-options "\-Ddataverse.fqdn=${HOST_DNS_ADDRESS}"
 
+./asadmin set-log-levels edu.harvard.iq.dataverse=FINE
 
 ./asadmin $ASADMIN_OPTS create-javamail-resource --mailhost "$MAIL_SERVER" --mailuser "dataversenotify" --fromaddress "do-not-reply@${HOST_DNS_ADDRESS}" mail/notifyMailSession
 
