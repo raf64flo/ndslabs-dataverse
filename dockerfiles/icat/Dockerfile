@@ -7,7 +7,7 @@ RUN apt-get update -y && apt-get install -y openjdk-7-jdk curl supervisor ssmtp
 
 # http://container-solutions.com/6-dockerfile-tips-official-images/
 RUN apt-get install -y flex make g++ libssl-dev \
-	&& wget http://www.digitalcorpora.org/downloads/bulk_extractor/bulk_extractor-1.5.5.tar.gz -O  /tmp/bulk_extractor.tar.gz \
+	&& wget http://digitalcorpora.org/downloads/bulk_extractor/bulk_extractor-1.5.5.tar.gz -O  /tmp/bulk_extractor.tar.gz \
     && cd /tmp \
 	&& tar xvfz bulk_extractor.tar.gz  \
 	&& cd bulk_extractor-1.5.5 \
