@@ -2,7 +2,7 @@
 
 RODS_PASSWORD=`sed '14q;d' /opt/irods/setup_responses`
 
-# Initialize the rods user environemtn
+# Initialize the rods user environment
 mkdir -p ~/.irods
 cat << EOF > ~/.irods/irods_environment.json
 {
@@ -14,6 +14,7 @@ cat << EOF > ~/.irods/irods_environment.json
 EOF
 iinit $RODS_PASSWORD
 
+
 # Update the rules files
 sed -i "s/RODS_ZONE/$RODS_ZONE/g" /opt/dataverse/archive.r
 sed -i "s/PRESERVATION_USER/$PRESERVATION_USER/g" /opt/dataverse/archive.r
@@ -23,6 +24,11 @@ sed -i "s/RODS_ZONE/$RODS_ZONE/g" /opt/dataverse/bitcurator.r
 sed -i "s/PRESERVATION_USER/$PRESERVATION_USER/g" /opt/dataverse/bitcurator.r
 sed -i "s/PRESERVATION_ZONE/$PRESERVATION_ZONE/g" /opt/dataverse/bitcurator.r
 sed -i "s/CURATOR_EMAIL/$CURATOR_EMAIL/g" /opt/dataverse/bitcurator.r
+
+sed -i "s/RODS_ZONE/$RODS_ZONE/g" /opt/dataverse/bitcurator_arg.r
+sed -i "s/PRESERVATION_USER/$PRESERVATION_USER/g" /opt/dataverse/bitcurator_arg.r
+sed -i "s/PRESERVATION_ZONE/$PRESERVATION_ZONE/g" /opt/dataverse/bitcurator_arg.r
+sed -i "s/CURATOR_EMAIL/$CURATOR_EMAIL/g" /opt/dataverse/bitcurator_arg.r
 
 sed -i "s/RODS_ZONE/$RODS_ZONE/g" /var/lib/irods/iRODS/server/bin/cmd/bcListSuspectedSensitive.sh
 
@@ -95,3 +101,11 @@ fi
 sed -i "s/CRON_FREQUENCY/$CRON_FREQUENCY/g" /opt/dataverse/bitcurator.r
 
 echo "*/$CRON_FREQUENCY * * * * /opt/dataverse/archive.sh >> /archive.log" | crontab
+
+cp /etc/irods/core.re /etc/irods/core.re.orig
+
+sed -i "s#^acPostProcForPut.*#acPostProcForPut { ON(\$objPath like '/dvnZone/home/dataverse/dvn_preservation/\*') { writeLine('serverLog', 'acPostProcForPut \$objPath'); msiExecCmd('dvArchive.sh', '\$objPath', 'null', 'null','null',\*Junk); } }#g" /etc/irods/core.re
+
+# Make sure rods user can write to dataverse collection
+ichmod -r write rods /dvnZone/home/dataverse/
+ichmod -r inherit /dvnZone/home/dataverse/

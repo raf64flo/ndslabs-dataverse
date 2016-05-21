@@ -16,7 +16,7 @@ bcExtractFeatureFilesRule {
     *File = *row.DATA_NAME;
     *CreateTime = int(*row.DATA_CREATE_TIME);
 
-    *CheckTime = *now - CRON_FREQUENCY*60 + 1;
+    *CheckTime = *now - CRON_FREQUENCY*60 + 5;
     if (*CreateTime > *CheckTime ) {
 
       writeLine("stdout", "Path = *Path, Resource= *Resource");
@@ -66,7 +66,7 @@ bcExtractFeatureFilesRule {
           cleanup(*Addr, *tempStr, *outFeatDir, *prefixStr, *status);
       }
     } else {
-      writeLine("stdout", "Skipping file *CreateTime < *CheckTime");
+      writeLine("stdout", "Skipping file *File, already processed ( *CreateTime < *CheckTime");
     }
   }
 }

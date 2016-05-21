@@ -82,5 +82,5 @@ isColl2 (*LPath,*Status) {
     }  # end of check on status
   }  # end of log collection creation
 }
-INPUT *Res="demoResc", *Src="/RODS_ZONE/home/PRESERVATION_USER/dvn_preservation", *Dest="/PRESERVATION_ZONE/RODS_ZONE/dvn_preservation"
+INPUT *Res="demoResc", *Src="/RODS_ZONE/home/PRESERVATION_USER/dvn_preservation", *Dest="/PRESERVATION_ZONE/home/PRESERVATION_USER/dvn_preservation"
 OUTPUT ruleExecOut
