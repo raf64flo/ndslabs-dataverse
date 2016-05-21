@@ -6,7 +6,8 @@ cat << EOF > ~/.irods/irods_environment.json
     "irods_host": "$DVICAT_PORT_1247_TCP_ADDR",
     "irods_port": $DVICAT_PORT_1247_TCP_PORT,
     "irods_user_name": "$PRESERVATION_USER",
-    "irods_zone_name": "$RODS_ZONE"
+    "irods_zone_name": "$RODS_ZONE",
+    "irods_default_hash_scheme": "SHA256"
 }
 EOF
 
