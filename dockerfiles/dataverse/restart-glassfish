@@ -5,4 +5,6 @@ pushd $GLASSFISH_BIN_DIR
 
 ./asadmin $ASADMIN_OPTS restart-domain domain1
 
+echo "OK" > /usr/local/glassfish4/glassfish/domains/domain1/applications/dataverse/healthcheck.txt
+
 popd
