@@ -108,7 +108,7 @@ if [ "$1" = 'dataverse' ]; then
 
     TWORAVENS_PORT=$TWORAVENS_NODE_PORT
     if [ -n "$TWORAVENS_PORT" ]; then
-            EXTERNAL_IP=$(curl http://api.ipify.org)
+            EXTERNAL_IP=$(curl -s http://api.ipify.org)
             #TWORAVENS_PORT=30001
             TWORAVENS_URL="http://$EXTERNAL_IP:$TWORAVENS_PORT"
             echo "Using TwoRavens at $TWORAVENS_URL"

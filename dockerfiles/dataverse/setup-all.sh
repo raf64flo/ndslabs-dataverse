@@ -5,8 +5,8 @@ until [ $(curl -w"%{http_code}" --output /dev/null --silent localhost:8080/resou
 
 command -v jq >/dev/null 2>&1 || { echo >&2 '`jq` ("sed for JSON") is required, but not installed. Download the binary for your platform from http://stedolan.github.io/jq/ and make sure it is in your $PATH (/usr/bin/jq is fine) and executable with `sudo chmod +x /usr/bin/jq`. On Mac, you can install it with `brew install jq` if you use homebrew: http://brew.sh . Aborting.'; exit 1; }
 
-echo "deleting all data from Solr"
-curl http://$SOLR_HOST:$SOLR_PORT/solr/update/json?commit=true -H "Content-type: application/json" -X POST -d "{\"delete\": { \"query\":\"*:*\"}}"
+echo "Initializing Solr"
+curl -s http://$SOLR_HOST:$SOLR_PORT/solr/update/json?commit=true -H "Content-type: application/json" -X POST -d "{\"delete\": { \"query\":\"*:*\"}}"
 
 SERVER=http://localhost:8080/api
 
@@ -28,24 +28,24 @@ echo "Setup the builtin roles"
 echo "Setup the authentication providers"
 ./setup-identity-providers.sh
 
-echo "Setting up the settings"
+echo "Initialize settings"
 echo  "- Allow internal signup"
-curl -X PUT -d yes "$SERVER/admin/settings/:AllowSignUp"
-curl -X PUT -d /dataverseuser.xhtml?editMode=CREATE "$SERVER/admin/settings/:SignUpUrl"
+curl -s -X PUT -d yes "$SERVER/admin/settings/:AllowSignUp"
+curl -s -X PUT -d /dataverseuser.xhtml?editMode=CREATE "$SERVER/admin/settings/:SignUpUrl"
 
-curl -X PUT -d doi "$SERVER/admin/settings/:Protocol"
-curl -X PUT -d 10.5072/FK2 "$SERVER/admin/settings/:Authority"
-curl -X PUT -d EZID "$SERVER/admin/settings/:DoiProvider"
-curl -X PUT -d / "$SERVER/admin/settings/:DoiSeparator"
-curl -X PUT -d burrito $SERVER/admin/settings/BuiltinUsers.KEY
-curl -X PUT -d empanada $SERVER/admin/settings/:BlockedApiKey
-curl -X PUT -d localhost-only $SERVER/admin/settings/:BlockedApiPolicy
+curl -s -X PUT -d doi "$SERVER/admin/settings/:Protocol"
+curl -s -X PUT -d 10.5072/FK2 "$SERVER/admin/settings/:Authority"
+curl -s -X PUT -d EZID "$SERVER/admin/settings/:DoiProvider"
+curl -s -X PUT -d / "$SERVER/admin/settings/:DoiSeparator"
+curl -s -X PUT -d burrito "$SERVER/admin/settings/BuiltinUsers.KEY"
+curl -s -X PUT -d empanada "$SERVER/admin/settings/:BlockedApiKey"
+curl -s -X PUT -d localhost-only "$SERVER/admin/settings/:BlockedApiPolicy"
 echo
 
 echo "Setting up the admin user (and as superuser)"
 adminResp=$(curl -s -H "Content-type:application/json" -X POST -d @data/user-admin.json "$SERVER/builtin-users?password=admin&key=burrito")
 echo $adminResp
-curl -X POST "$SERVER/admin/superuser/dataverseAdmin"
+curl -s -X POST "$SERVER/admin/superuser/dataverseAdmin"
 echo
 
 echo "Setting up the root dataverse"
@@ -62,4 +62,4 @@ echo
 # OPTIONAL USERS AND DATAVERSES
 #./setup-optional.sh
 
-echo "Setup done. Consider running post-install-api-block.sh for blocking the sensitive API."
+#echo "Setup done. Consider running post-install-api-block.sh for blocking the sensitive API."

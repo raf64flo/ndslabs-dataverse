@@ -4,12 +4,22 @@
 GLASSFISH_BIN_DIR=$GLASSFISH_DIRECTORY/bin
 pushd $GLASSFISH_BIN_DIR
 
-./asadmin create-domain --nopassword domain1
+echo "AS_ADMIN_PASSWORD=adminadmin"  > /tmp/tmppwd
+#./asadmin create-domain --nopassword domain1
+export ASADMIN_OPTS="--user admin --passwordfile /tmp/tmppwd"
+./asadmin $ASADMIN_OPTS create-domain domain1
 ./asadmin $ASADMIN_OPTS start-domain domain1
 
-./asadmin $ASADMIN_OPTS delete-jvm-options "-XX\:MaxPermSize=192m"
-./asadmin $ASADMIN_OPTS create-jvm-options "-XX\:MaxPermSize=512m"
-./asadmin $ASADMIN_OPTS create-jvm-options "-XX\:PermSize=256m"
+
+./asadmin $ASADMIN_OPTS delete-jvm-options "-Xmx512m"
+./asadmin $ASADMIN_OPTS create-jvm-options "-Xms1024m"
+./asadmin $ASADMIN_OPTS create-jvm-options "-Xmx1024m"
+./asadmin $ASADMIN_OPTS create-jvm-options "-XX\:+UseConcMarkSweepGC"
+./asadmin $ASADMIN_OPTS create-jvm-options "-XX\:+CMSParallelRemarkEnabled"
+./asadmin $ASADMIN_OPTS delete-jvm-options "-client"
+./asadmin $ASADMIN_OPTS enable-secure-admin
+./asadmin $ASADMIN_OPTS create-jvm-options "-server"
+./asadmin $ASADMIN_OPTS list-jvm-options
 
 ./asadmin $ASADMIN_OPTS create-jvm-options "\-Ddoi.password=apitest"
 ./asadmin $ASADMIN_OPTS create-jvm-options "\-Ddoi.username=apitest"

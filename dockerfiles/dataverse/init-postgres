@@ -24,6 +24,7 @@ my %CONFIG_DEFAULTS = (
 );
 
 
+
 # Config always from ENV
 for my $ENTRY (@CONFIG_VARIABLES) {
     if (!$ENV{$ENTRY}) {
@@ -31,7 +32,6 @@ for my $ENTRY (@CONFIG_VARIABLES) {
     } else {
         $CONFIG_DEFAULTS{$ENTRY} = $ENV{$ENTRY};
     }
-    print "$ENTRY=" . $CONFIG_DEFAULTS{$ENTRY} . "\n";
 }
 
 # Supported Postgres JDBC drivers:
@@ -123,14 +123,14 @@ print "Using psql version " . $pg_major_version . "." . $pg_minor_version . "\n"
 
 
 # Check if we can connect
-if ( system( $psql_exec . "/psql -U postgres -h " . $CONFIG_DEFAULTS{'POSTGRES_HOST'} . " -p " . $CONFIG_DEFAULTS{'POSTGRES_PORT'} . " -c 'SELECT * FROM pg_roles' > /dev/null 2>&1" ) == 0 ) {
+if ( system( $psql_exec . "/psql -q -U postgres -h " . $CONFIG_DEFAULTS{'POSTGRES_HOST'} . " -p " . $CONFIG_DEFAULTS{'POSTGRES_PORT'} . " -c 'SELECT * FROM pg_roles' > /dev/null 2>&1" ) == 0 ) {
    print "Connected to postgres on " . $CONFIG_DEFAULTS{'POSTGRES_HOST'} . ":" . $CONFIG_DEFAULTS{'POSTGRES_PORT'} . "\n";
 }
 
 
 # 4d. CHECK IF THIS USER ALREADY EXISTS:
 my $psql_command_rolecheck =
-  $psql_exec . "/psql -h " . $CONFIG_DEFAULTS{'POSTGRES_HOST'} . " -p " . $CONFIG_DEFAULTS{'POSTGRES_PORT'} . " -c \"\" -d postgres " . $CONFIG_DEFAULTS{'POSTGRES_USER'} . " >/dev/null 2>&1";
+  $psql_exec . "/psql -q -h " . $CONFIG_DEFAULTS{'POSTGRES_HOST'} . " -p " . $CONFIG_DEFAULTS{'POSTGRES_PORT'} . " -c \"\" -d postgres " . $CONFIG_DEFAULTS{'POSTGRES_USER'} . " >/dev/null 2>&1";
 print "$psql_command_rolecheck\n";
 if ( ( my $exitcode = system($psql_command_rolecheck) ) == 0 ) {
     print "User (role) " . $CONFIG_DEFAULTS{'POSTGRES_USER'} . " already exists;\n";
@@ -138,7 +138,7 @@ if ( ( my $exitcode = system($psql_command_rolecheck) ) == 0 ) {
 else {
     # 4e. CREATE DVN DB USER:
 
-    print "\nCreating Postgres user (role) for the DVN:\n";
+    print "\nCreating Postgres user (role) for the DVN: " .  $CONFIG_DEFAULTS{'POSTGRES_USER'} . "\n";
 
     open TMPCMD, ">/tmp/pgcmd.$$.tmp";
 
@@ -169,19 +169,18 @@ else {
 
     unlink "/tmp/pgcmd.$$.tmp";
 
-
-    print "done.\n";
 }
 
 ## 4f. CREATE DVN DB:
 #
-print "\nCreating Postgres database:\n";
+print "Creating Postgres database: " . $CONFIG_DEFAULTS{'POSTGRES_DATABASE'} . "\n";
+
 my $newdb = 0;
 
 my $psql_command_dbcheck =
-  $psql_exec . "/psql -h " . $CONFIG_DEFAULTS{'POSTGRES_HOST'} . " -p " . $CONFIG_DEFAULTS{'POSTGRES_PORT'} . " -c \"\" -d " . $CONFIG_DEFAULTS{'POSTGRES_DATABASE'} . " " . $CONFIG_DEFAULTS{'POSTGRES_USER'} . " >/dev/null 2>&1";
+  $psql_exec . "/psql -q -h " . $CONFIG_DEFAULTS{'POSTGRES_HOST'} . " -p " . $CONFIG_DEFAULTS{'POSTGRES_PORT'} . " -c \"\" -d " . $CONFIG_DEFAULTS{'POSTGRES_DATABASE'} . " " . $CONFIG_DEFAULTS{'POSTGRES_USER'} . " >/dev/null 2>&1";
 
-print "$psql_command_dbcheck\n";
+#print "$psql_command_dbcheck\n";
 
 if ( ( my $exitcode = system($psql_command_dbcheck) ) == 0 ) {
     print "Database " . $CONFIG_DEFAULTS{'POSTGRES_DATABASE'} . " already exists;\n";
@@ -213,24 +212,26 @@ if ($newdb) {
    print "Initializing postgres database\n";
    # Initialize postgres database
 
+   print "Executing DDL\n";
    my $psql_ddl_command = $psql_exec
-     . "/psql "
+     . "/psql -q "
      . " -U postgres"
      . " -h " . $CONFIG_DEFAULTS{'POSTGRES_HOST'}
      . " -p " . $CONFIG_DEFAULTS{'POSTGRES_PORT'}
      . " -d " . $CONFIG_DEFAULTS{'POSTGRES_DATABASE'}
      . " -f " . "createDDL.sql";
 
-   print "$psql_ddl_command\n";
+	 #print "$psql_ddl_command\n";
 
    if ( my $exitcode = system($psql_ddl_command) == 0 ) {
-       print "Executed DDL.\n";
+       print "Executed DDL\n";
    } else {
    }
 
+   print "Loading reference data\n";
    my $psql_init_command =
        $psql_exec
-     . "/psql "
+     . "/psql -q "
      . " -U postgres"
      . " -h " . $CONFIG_DEFAULTS{'POSTGRES_HOST'}
      . " -p " . $CONFIG_DEFAULTS{'POSTGRES_PORT'}
@@ -238,13 +239,13 @@ if ($newdb) {
      . " -f " . $SQL_REFERENCE_DATA;
 
    if ( my $exitcode = system($psql_init_command ) == 0 ) {
-       print "Loaded reference data.\n";
+       print "Loaded reference data\n";
    } else {
    }
 
    my $psql_grant_command =
        $psql_exec
-     . "/psql "
+     . "/psql -q "
      . " -U postgres"
      . " -h " . $CONFIG_DEFAULTS{'POSTGRES_HOST'}
      . " -p " . $CONFIG_DEFAULTS{'POSTGRES_PORT'}
@@ -252,13 +253,13 @@ if ($newdb) {
 	 . " -c \"GRANT ALL PRIVILEGES ON ALL TABLES IN SCHEMA public TO " . $CONFIG_DEFAULTS{'POSTGRES_USER'} ."; GRANT ALL PRIVILEGES ON ALL SEQUENCES IN SCHEMA public TO " . $CONFIG_DEFAULTS{'POSTGRES_USER'} . "\"";
 
    if ( my $exitcode = system($psql_grant_command ) == 0 ) {
-       print "Grant succeeded.\n";
+       print "Grant succeeded\n";
    } else {
        print "Grant failed.\n";
    }
 }
 
-print "\nInstalling the Glassfish PostgresQL driver...\n ";
+print "\nInstalling the Glassfish PostgresQL driver\n ";
 
 my $install_driver_jar = "";
 
