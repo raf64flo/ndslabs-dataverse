@@ -49,7 +49,7 @@ docker run -e RODS_ZONE=fedZone  -p 1247:1247 -d  --name=icat-preservation ndsla
 
 Start the Dataverse-local iRods server with custom rules:
 ```
-docker run -e RODS_ZONE=dvnZone -e PRESERVATION_USER=dataverse -e PRESERVATION_ZONE=fedZone -e PRESERVATION_SERVER=<hostname of icat-preservation container> -e PRESERVATION_SERVER_PORT=1247 -e PRESERVATION_SERVER_IP=<IP of icat-preservation container> -e PRESERVATION_PASSWORD=test --name=dataverse-icat -d ndslabs/dataverse-icat:dev
+docker run -e RODS_ZONE=dvnZone -e PRESERVATION_USER=dataverse -e PRESERVATION_ZONE=fedZone -e PRESERVATION_SERVER=<hostname of icat-preservation container> -e PRESERVATION_SERVER_PORT=1247 -e PRESERVATION_SERVER_IP=<IP of icat-preservation container> -e PRESERVATION_PASSWORD=test --name=dataverse-icat -d ndslabs/dataverse-icat:latest
 ```
 
 
