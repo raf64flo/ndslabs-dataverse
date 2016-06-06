@@ -44,7 +44,7 @@ docker run --name=tworavens -d ndslabs/dataverse-tworavens:latest
 
 Start the preservation iRods server w/ federation listener:
 ```
-docker run -e RODS_ZONE=fedZone E -p 1247:1247 -d  --name=icat-preservation ndslabs/irods-icat:latest
+docker run -e RODS_ZONE=fedZone  -p 1247:1247 -d  --name=icat-preservation ndslabs/irods-icat:latest
 ```
 
 Start the Dataverse-local iRods server with custom rules:
