@@ -60,7 +60,7 @@ docker run -p 8080:8080 -d --link solr:solr --link postgres:postgres --link rser
 
 With iRods containers:
 ```
-docker run -d -p 8080:8080 --link solr:solr --link postgres:postgres -e "POSTGRES_DATABASE=dvndb" -e "POSTGRES_USER=dvnapp" -e "POSTGRES_PASSWORD=secret" -e "RSERVE_USER=rserve" -e "RSERVE_PASSWORD=rserve" -e DVICAT_PORT_1247_TCP_PORT=1247  -e DVICAT_PORT_1247_TCP_ADDR=$DVICAT_IP -e PRESERVATION_USER=dataverse -e PRESERVATION_PASSWORD=test -e RODS_ZONE=dvnZone  -e  --name=dataverse  ndslabs/dataverse:latest
+docker run -d -p 8080:8080 --link solr:solr --link postgres:postgres -e "POSTGRES_DATABASE=dvndb" -e "POSTGRES_USER=dvnapp" -e "POSTGRES_PASSWORD=secret" -e "RSERVE_USER=rserve" -e "RSERVE_PASSWORD=rserve" -e DVICAT_PORT_1247_TCP_PORT=1247  -e DVICAT_PORT_1247_TCP_ADDR=<IP if DV iCAT instance> -e PRESERVATION_USER=dataverse -e PRESERVATION_PASSWORD=test -e RODS_ZONE=dvnZone  -e  --name=dataverse  ndslabs/dataverse:latest
 ```
 
 
