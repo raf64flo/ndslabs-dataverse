@@ -1,4 +1,4 @@
-FROM centos:latest
+FROM centos:6
 MAINTAINER Craig Willis (willis8@illinois.edu)
 
 RUN yum install -y wget unzip perl git java-1.8.0-openjdk-devel postgresql.x86_64
