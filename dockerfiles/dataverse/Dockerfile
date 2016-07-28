@@ -1,4 +1,4 @@
-FROM centos:6
+FROM centos:7.2.1511
 MAINTAINER Craig Willis (willis8@illinois.edu)
 
 # Install dependencies
