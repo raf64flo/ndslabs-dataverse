@@ -1,4 +1,4 @@
-FROM ndslabs/irods-icat:latest
+FROM ndslabs/irods-icat:4.1.3
 MAINTAINER willis8@illinois.edu
 
 # Install bulk_extractor

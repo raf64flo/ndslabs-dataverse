@@ -1,4 +1,4 @@
-FROM centos:latest
+FROM centos:7.2.1511
 MAINTAINER Craig Willis (willis8@illinois.edu)
 
 # For RServe
@@ -48,7 +48,7 @@ RUN cd /tmp &&  \
 RUN /usr/sbin/groupadd -g 97 -o -r rserve  && \
     /usr/sbin/useradd -g rserve -o -r -d /usr/lib64/R/library -s /bin/bash -c "Rserve User" -u 97 rserve 
 
-COPY Dockerfile.dataverse-rserve /Dockerfile
+COPY Dockerfile /Dockerfile
 COPY Rserv.* /tmp/
 
 RUN cd /tmp/  && \
