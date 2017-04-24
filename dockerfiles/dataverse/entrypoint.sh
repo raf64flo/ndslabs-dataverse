@@ -97,7 +97,7 @@ if [ "$1" = 'dataverse' ]; then
         echo Required service Solr not running. Have you started the required services?
         exit 1 
     fi
-
+    
     cd ~/dvinstall
     ./init-dataverse
 
