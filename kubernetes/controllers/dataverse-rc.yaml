@@ -18,6 +18,8 @@ spec:
         - containerPort: 8080
           protocol: TCP
         env:
+        - name: ADMIN_PASSWORD
+          value: "admin"
         - name: SMTP_HOST
           value: "smtp.ncsa.illinois.edu"
         - name: HOST_DNS_ADDRESS 
